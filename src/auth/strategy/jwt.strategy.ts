@@ -12,6 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   async validate(payload: any) {
     console.log('validate()', payload);
     return payload;
