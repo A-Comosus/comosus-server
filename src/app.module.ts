@@ -4,6 +4,8 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { AppResolver } from './app.resolver';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -15,5 +17,6 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AuthModule,
   ],
+  providers: [AppResolver, AppService],
 })
 export class AppModule {}
