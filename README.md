@@ -58,16 +58,47 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+### 1. Download example & install dependencies
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Install npm dependencies:
 
-## Stay in touch
+```
+cd prisma-examples/databases/mongodb
+npm install
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 2. Start MongoDB with Docker Compose
 
-## License
+Run the following command from the `mongodb` folder to start MongoDB:
 
-  Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+docker compose up -d
+```
+
+> **Note:** The `docker-compose.yml` is where the root username and password are set with the `MONGO_INITDB_ROOT_USERNAME` `MONGO_INITDB_ROOT_PASSWORD` env vars
+
+### 3. Configure the database connection URL
+
+Prisma uses the `DATABASE_URL` environment variable defined in the `.env` file (in the same folder as `package.json`) to connect to the database.
+
+Create the file:
+
+```bash
+touch .env
+```
+
+Then add the following line:
+
+```
+DATABASE_URL="mongodb://localhost:27017"
+```
+
+### 4. Generate Prisma Client
+
+Generate Prisma Client using the following command:
+
+```bash
+npx prisma generate
+```
+
+
