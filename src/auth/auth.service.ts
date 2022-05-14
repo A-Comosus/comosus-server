@@ -1,50 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@src/user/entities/user.entity';
+import { UserService } from '@src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../users/models/user';
-
-import { UsersService } from '../users/users.service';
-import { jwtSecret } from './constants';
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly usersService: UsersService,
-        private readonly jwtService: JwtService,
-    ) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-    validate(email: string, password: string): User | null {
-        const user = this.usersService.getUserByEmail(email);
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.userService.findByUsername(username);
 
-        if (!user) {
-            return null;
-        }
-
-        const passwordIsValid = password === user.password;
-        return passwordIsValid ? user : null;
+    if (user && user.password === password) {
+      const { password, ...result } = user;
+      return result;
     }
 
-    login(user: User): { access_token: string } {
-        const payload = {
-            email: user.email,
-            sub: user.userId
-        }
+    return null;
+  }
 
-        return {
-            access_token: this.jwtService.sign(payload),
-        }
-    }
-
-    verify(token: string): User {
-        const decoded = this.jwtService.verify(token, {
-            secret: jwtSecret
-        })
-
-        const user = this.usersService.getUserByEmail(decoded.email);
-
-        if (!user) {
-            throw new Error('Unable to get the user from decoded token.');
-        }
-
-        return user;
-    }
+  async login(user: User) {
+    return {
+      accessToken: this.jwtService.sign({
+        username: user.username,
+        sub: user.id,
+      }),
+      user,
+    };
+  }
 }
