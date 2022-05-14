@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
 const mockUsers = [
-  { id: 1, username: 'norris', password: 'norris' },
-  { id: 2, username: 'max', password: 'max' },
+  { username: 'norris', email: 'example@email.com', password: 'norris' },
+  { username: 'max', email: 'example@email.com', password: 'max' },
 ];
 
 async function bootstrap() {
@@ -15,12 +15,10 @@ async function bootstrap() {
 
   const prisma = new PrismaClient();
   prisma.$connect().then(async () => {
-    await prisma.user.create({
-      data: {
-        username: 'norriswu',
-        email: 'norris.wu.au@outlook.com',
-        password: 'secret',
-      },
+    await prisma.user.deleteMany();
+
+    await prisma.user.createMany({
+      data: mockUsers,
     });
   });
 
