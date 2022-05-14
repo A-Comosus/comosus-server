@@ -5,6 +5,7 @@
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
+    "prisma": "prisma",
     "nest": "nest",
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -29,6 +30,7 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.1.1",
+    "@prisma/client": "^3.14.0",
     "apollo-server-express": "^3.7.0",
     "graphql": "^16.4.0",
     "lodash": "^4.17.21",
