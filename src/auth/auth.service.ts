@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@src/user/entities/user.entity';
 import { UserService } from '@src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { LoginUserInput } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -29,5 +30,14 @@ export class AuthService {
       }),
       user,
     };
+  }
+
+  async register({ username, password }: LoginUserInput) {
+    const user = await this.userService.findByUsername(username);
+    if (user) {
+      throw new Error(`User ${username} already registered`);
+    }
+
+    return this.userService.create({ username, password });
   }
 }
