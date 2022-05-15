@@ -59,3 +59,22 @@ $ npm run test:e2e
 $ yarn run test:cov
 $ npm run test:cov
 ```
+
+## 🥞 What is your tech stack?
+
+| Category            | Packages                                                                       |
+| ------------------- | ------------------------------------------------------------------------------ |
+| Framework           | `nest`                                                                         |
+| BootStrapper        | `@nestjs/cli`                                                                  |
+| Scripting Language  | `typescript`                                                                   |
+| Web API             | `graphql`, `@nestjs/graphql`                                                   |
+| Database ORM Client | `prisma`, `prisma/client`                                                      |
+| Encryption          | `bcrypt`                                                                       |
+| Authentication      | `@nestjs/passport`, `passport`, `passport-local`,`@nestjs/jwt`, `passport-jwt` |
+| Localisation        | `i18next`                                                                      |
+| Validation          | `class-validator`,`class-transformer`                                          |
+| Logging             |                                                                                |
+| Testing             | `jest`, `supertest`                                                            |
+| Code Control        | `eslint`, `prettier`, `eslint-plugin-prettier`                                 |
+| CI/CD               | `GitHub Actions`                                                               |
+| `undefined`         | `lodash`                                                                       |
