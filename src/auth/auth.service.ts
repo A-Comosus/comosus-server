@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@src/user/entities/user.entity';
 import { UserService } from '@src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { LoginUserInput } from './dto';
+import { UserDetailInput } from './dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -34,14 +34,14 @@ export class AuthService {
     };
   }
 
-  async register(loginUserInput: LoginUserInput) {
-    const { username } = loginUserInput;
+  async register(_userDetail: UserDetailInput) {
+    const { username } = _userDetail;
     const user = await this.userService.findByUsername(username);
     if (user) {
       throw new Error(`User ${username} already registered`);
     }
 
-    const password = await bcrypt.hash(loginUserInput.password, 10);
+    const password = await bcrypt.hash(_userDetail.password, 10);
 
     return this.userService.create({ username, password });
   }

@@ -1,2 +1,2 @@
-export { LoginUserInput } from './login-user.input';
+export { UserDetailInput } from './user-detail.input';
 export { LoginResponse } from './login-response';
