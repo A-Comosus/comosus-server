@@ -1,32 +1,50 @@
+# 🍍 A-Comosus Server
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## 🏃‍♂️ How to run this server?
+
+### Setting up development environment
+
+At this stage, our `docker-compose.yml` is not ready yet, so please either find the database `CONNECTION_STRING` either by [setting it up yourself](https://www.mongodb.com/docs/atlas/getting-started/) or ask your project admin.
+
+Once our `docker-compose.yml` is ready, you will be able to run
 
 ```bash
-$ npm install
+$ docker-compose up
 ```
 
-## Running the app
+and set the your `CONNECTION_STRING` to your local mongodb replica set, then you are good to go!
+
+### Starting the server
+
+This project prefers using `yarn` as it's package manager, but you can use `npm` or `pnpm` if you really want to.
 
 ```bash
-# to install
-$ yarn install
-# development
-$ yarn run start
-$ npm run start
+# Installing dependencies
+$ yarn
 
-# watch mode
-$ yarn run start:dev
-$ npm run start:dev
+# Generate Prisma Client
+$ yarn prisma generate
 
-# production mode
+# Start the server in development mode with watch mode or...
+$ yarn start:dev
+ or
+$ npm start:dev
+
+# without watch mode
+$ yarn start:dev
+or
+$ npm start:dev
+
+# Or run this to start the server in production mode
 $ yarn run start:prod
 $ npm run start:prod
 ```
 
-## Test
+## ✅ How to run tests for this server?
 
 ```bash
 # unit tests
@@ -40,20 +58,4 @@ $ npm run test:e2e
 # test coverage
 $ yarn run test:cov
 $ npm run test:cov
-```
-
-## Docker
-
-```bash
-$ docker-compose up -d
-
-# docker shell
-$ docker exec -it mongodb /bin/bash
-$ mongo mongodb://localhost:27017 -u admin -p admin
-```
-
-## prisma (For fking sake you need to install it again)
-
-```bash
-$ npx prisma init
 ```
