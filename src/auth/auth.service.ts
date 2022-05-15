@@ -21,6 +21,7 @@ export class AuthService {
 
     const isValid = await bcrypt.compare(_password, user?.password);
     if (isValid) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
     }
