@@ -8,13 +8,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretKey: 'secret', // TODO: Fetch this from environment
-      loggin: true,
+      secretOrKey: 'secret', // TODO: Fetch this from environment
+      logging: true,
     });
   }
 
   /**
-   *  Store decoded jwt token back to context
+   * Store decoded jwt token back to context
+   * Can be accesed via (@Context() context) in resolver query/mutation params
    */
   async validate({ sub, username }: any) {
     return { userId: sub, username };
