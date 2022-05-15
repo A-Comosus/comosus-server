@@ -14,12 +14,6 @@ export class UserResolver {
     return this.userService.findAll();
   }
 
-  @Query(() => User, { name: 'userById' })
-  @UseGuards(JwtAuthGuard)
-  findById(@Args('id', { type: () => Int }) _id: number) {
-    return this.userService.findById(_id);
-  }
-
   @Query(() => User, { name: 'userByUsername' })
   @UseGuards(JwtAuthGuard)
   findByUsername(@Args('username') _username: string) {

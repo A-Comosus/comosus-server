@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@src/user/entities/user.entity';
 import { UserService } from '@src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserDetailInput } from './dto';
+import { RegisterDetailInput } from './dto';
 import * as bcrypt from 'bcrypt';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class AuthService {
@@ -14,9 +15,12 @@ export class AuthService {
 
   async validateUser(_username: string, _password: string): Promise<any> {
     const user = await this.userService.findByUsername(_username);
-    const isValid = await bcrypt.compare(_password, user?.password);
+    if (isNil(user)) {
+      throw new Error(`User ${_username} does not exist.`);
+    }
 
-    if (user && isValid) {
+    const isValid = await bcrypt.compare(_password, user?.password);
+    if (isValid) {
       const { password, ...result } = user;
       return result;
     }
@@ -34,15 +38,15 @@ export class AuthService {
     };
   }
 
-  async register(_userDetail: UserDetailInput) {
-    const { username } = _userDetail;
+  async register(_registerDetail: RegisterDetailInput) {
+    const { email, username } = _registerDetail;
     const user = await this.userService.findByUsername(username);
     if (user) {
       throw new Error(`User ${username} already registered`);
     }
 
-    const password = await bcrypt.hash(_userDetail.password, 10);
+    const password = await bcrypt.hash(_registerDetail.password, 10);
 
-    return this.userService.create({ username, password });
+    return this.userService.create({ email, username, password });
   }
 }

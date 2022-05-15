@@ -3,11 +3,6 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
-const mockUsers = [
-  { username: 'norris', email: 'example@email.com', password: 'norris' },
-  { username: 'max', email: 'example@email.com', password: 'max' },
-];
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get<ConfigService>(ConfigService);
@@ -17,13 +12,9 @@ async function bootstrap() {
   prisma
     .$connect()
     .then(async () => {
+      console.log('Connection to database has been established');
       await prisma.user.deleteMany();
-      await prisma.user.createMany({
-        data: mockUsers,
-      });
-
-      const allUser = await prisma.user.findMany();
-      console.log(allUser);
+      console.log('Existing data has been deleted on connected');
     })
     .catch((error) => {
       console.error(error);

@@ -1,33 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  private readonly mockUsers = [
-    { id: 1, username: 'norris', password: 'norris' },
-    { id: 2, username: 'max', password: 'max' },
-  ];
+  prisma = new PrismaClient();
 
-  create(_createUserInput: CreateUserInput) {
-    const newUser = {
-      ..._createUserInput,
-      id: this.mockUsers.length + 1,
-    };
-
-    this.mockUsers.push(newUser);
-
-    return newUser;
+  async create(_createUserInput: CreateUserInput) {
+    return await this.prisma.user.create({ data: _createUserInput });
   }
 
-  findAll() {
-    return this.mockUsers;
+  async findAll() {
+    return await this.prisma.user.findMany();
   }
 
-  findById(_id: number) {
-    return this.mockUsers.find((user) => user.id === _id);
-  }
-
-  findByUsername(_username: string) {
-    return this.mockUsers.find((user) => user.username === _username);
+  async findByUsername(_username: string) {
+    return this.prisma.user.findFirst({ where: { username: _username } });
   }
 }
