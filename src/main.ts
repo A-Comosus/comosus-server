@@ -14,15 +14,19 @@ async function bootstrap() {
   await app.listen(parseInt(config.get('PORT'), 10) ?? 3100);
 
   const prisma = new PrismaClient();
-  prisma.$connect().then(async () => {
-    await prisma.user.deleteMany();
+  prisma
+    .$connect()
+    .then(async () => {
+      await prisma.user.deleteMany();
+      await prisma.user.createMany({
+        data: mockUsers,
+      });
 
-    await prisma.user.createMany({
-      data: mockUsers,
+      const allUser = await prisma.user.findMany();
+      console.log(allUser);
+    })
+    .catch((error) => {
+      console.error(error);
     });
-  });
-
-  const allUser = await prisma.user.findMany();
-  console.log(allUser);
 }
 bootstrap();
