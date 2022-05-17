@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '@src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local.strategy';
+import { LocalStrategy, JwtStrategy } from './strategies';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -15,6 +15,6 @@ import { JwtModule } from '@nestjs/jwt';
       secret: 'secret', // TODO: store this as environment variable
     }),
   ],
-  providers: [AuthService, AuthResolver, LocalStrategy],
+  providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}
