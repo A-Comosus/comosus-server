@@ -99,6 +99,7 @@ Generate Prisma Client using the following command:
 
 ```bash
 npx prisma generate
+yarn prisma db push
 ```
 
 
