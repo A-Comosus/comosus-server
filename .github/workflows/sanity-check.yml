@@ -31,7 +31,7 @@ jobs:
       - run: echo "🏭 Workflow will now attempts build your branch."
 
       - name: Checking pull request for production error
-      - run: yarn build
+        run: yarn build
       - run: echo "🏭 Build complete!"
 
       - run: echo "🍏 This job has finished with status - ${{ job.status }}."
