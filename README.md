@@ -8,19 +8,17 @@
 
 ### Setting up development environment
 
-At this stage, our `docker-compose.yml` is not ready yet, so please either find the database `CONNECTION_STRING` either by [setting it up yourself](https://www.mongodb.com/docs/atlas/getting-started/) or ask your project admin.
+At this stage, our `docker-compose.yml` is not ready yet, so please either find the database `DATABASE_URL` either by [setting it up yourself](https://www.mongodb.com/docs/atlas/getting-started/) or ask your project admin.
 
-Once our `docker-compose.yml` is ready, you will be able to run
+Once your atlas is created, create a `.env` file at project root directory and add you database connection string as `DATABASE_URL`
 
-```bash
-$ docker-compose up
+```js
+DATABASE_URL = YOUR_CONNECTION_STRING;
 ```
-
-and set the your `CONNECTION_STRING` to your local mongodb replica set, then you are good to go!
 
 ### Starting the server
 
-This project prefers using `yarn` as it's package manager, but you can use `npm` or `pnpm` if you really want to.
+This project prefers using `yarn` as it's package manager.
 
 ```bash
 # Installing dependencies
@@ -35,9 +33,9 @@ $ yarn start:dev
 $ npm start:dev
 
 # without watch mode
-$ yarn start:dev
+$ yarn start
 or
-$ npm start:dev
+$ npm start
 
 # Or run this to start the server in production mode
 $ yarn run start:prod
