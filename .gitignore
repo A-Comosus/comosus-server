@@ -6,6 +6,12 @@
 # GraphQL Auto Generated Schema
 *.gql
 
+# Package Manager
+package-lock.json
+
+# Prisma Generated
+database/
+
 # User-specific stuff:
 .idea/**/workspace.xml
 .idea/**/tasks.xml
