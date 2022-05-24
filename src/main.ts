@@ -16,8 +16,6 @@ async function bootstrap() {
     .$connect()
     .then(async () => {
       console.log('Connection to database has been established');
-      await prisma.user.deleteMany();
-      console.log('Existing data has been deleted on connected');
     })
     .catch((error) => {
       console.error(error);
