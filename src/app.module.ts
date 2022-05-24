@@ -18,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema/schema.gql'),
       sortSchema: true,
+      introspection: true,
     }),
     UserModule,
     AuthModule,
