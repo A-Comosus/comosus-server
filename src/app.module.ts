@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { LinkModule } from './link/link.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     UserModule,
     AuthModule,
+    LinkModule,
   ],
   providers: [AppResolver, AppService],
 })
