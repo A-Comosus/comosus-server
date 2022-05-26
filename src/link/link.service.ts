@@ -27,8 +27,17 @@ export class LinkService {
     return `This action returns a #${id} link`;
   }
 
-  update(id: number, updateLinkInput: UpdateLinkInput) {
-    return `This action updates a #${id} link`;
+  async update(id: string, { enabled, title, url }: UpdateLinkInput) {
+    const updatedLink = await this.prisma.link.update({
+      where: { id },
+      data: {
+        enabled,
+        title,
+        url,
+      },
+    });
+
+    return updatedLink;
   }
 
   remove(id: number) {

@@ -23,8 +23,8 @@ export class LinkResolver {
   }
 
   @Mutation(() => Link)
-  updateLink(@Args('updateLinkInput') updateLinkInput: UpdateLinkInput) {
-    return this.linkService.update(updateLinkInput.id, updateLinkInput);
+  updateLink(@Args('data') _updateLinkInput: UpdateLinkInput) {
+    return this.linkService.update(_updateLinkInput.id, _updateLinkInput);
   }
 
   @Mutation(() => Link)
