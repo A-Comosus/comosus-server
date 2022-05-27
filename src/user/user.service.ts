@@ -15,6 +15,9 @@ export class UserService {
   }
 
   async findByUsername(_username: string) {
-    return this.prisma.user.findFirst({ where: { username: _username } });
+    return this.prisma.user.findFirst({
+      where: { username: _username },
+      include: { links: true },
+    });
   }
 }
