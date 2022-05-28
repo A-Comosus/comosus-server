@@ -8,6 +8,7 @@
 
 #### That the feature you have worked on has its...
 
+- [ ] relevant information updated in `README.MD`
 - [ ] swagger doc created/updated so that other developers can read the related documentation.
 - [ ] logging included/updated so that we can debug errors when the app is live in the UAT environment.
 - [ ] unit tests created/updated so that we can integrate this new release and sleep without worries at night/day.
