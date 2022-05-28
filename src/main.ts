@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
 import { AppModule } from './app.module';
+import { setupSwagger } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,5 +21,6 @@ async function bootstrap() {
     .catch((error) => {
       console.error(error);
     });
+  setupSwagger(app);
 }
 bootstrap();
