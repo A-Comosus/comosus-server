@@ -6,10 +6,10 @@
 
 ### Developer Checklist
 
-#### That the feature you have worked on has it's...
+#### That the feature you have worked on has its...
 
-- [ ] swagger doc created/updated so that other developer can read the related documentation.
-- [ ] logging included/updated so that we can debug error when the app is live in UAT environment.
+- [ ] swagger doc created/updated so that other developers can read the related documentation.
+- [ ] logging included/updated so that we can debug errors when the app is live in the UAT environment.
 - [ ] unit tests created/updated so that we can integrate this new release and sleep without worries at night/day.
 
 #### When you finished, you will want to make sure you have...
