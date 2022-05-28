@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { AppModule } from './app.module';
+import { AppModule } from './resource/app/app.module';
 import { setupSwagger } from './config';
 import { PrismaService } from '@common';
 
