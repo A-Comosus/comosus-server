@@ -4,9 +4,11 @@ import { PrismaClient } from '@prisma/client';
 import 'crypto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addHours = require('date-fns/addHours');
+import { PrismaService } from '@src/common';
+
 @Injectable()
 export class UserService {
-  prisma = new PrismaClient();
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(_createUserInput: CreateUserInput) {
     return await this.prisma.user.create({ data: _createUserInput });

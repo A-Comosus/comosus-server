@@ -12,7 +12,11 @@
     "baseUrl": "./src",
     "paths": {
       "@src/*": ["./*"],
-      "@auth/*": ["./auth/*"]
+      "@auth/*": ["./auth/*"],
+      "@common": ["./common"],
+      "@common/*": ["./common/*"],
+      "@resource": ["./resource"],
+      "@resource/*": ["./resource/*"]
     },
     "incremental": true,
     "skipLibCheck": true

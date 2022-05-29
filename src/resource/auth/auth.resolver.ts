@@ -8,7 +8,7 @@ import {
   RegisterDetailInput,
   ForgetPasswordInput,
 } from './dto';
-import { User } from '@src/user/entities/user.entity';
+import { User } from '@src/resource/user/entities/user.entity';
 
 @Resolver()
 export class AuthResolver {
