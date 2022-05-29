@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
 import * as dotenv from 'dotenv';
 import { AppModule } from './resource/app/app.module';
 import { setupSwagger } from './config';
