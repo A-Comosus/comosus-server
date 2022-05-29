@@ -1,4 +1,5 @@
 import * as nodemailer from 'nodemailer';
+import { Logger } from '@nestjs/common';
 
 export const sendEmail = async (email: string, emailContent: string) => {
   const transporter = nodemailer.createTransport({
@@ -19,5 +20,5 @@ export const sendEmail = async (email: string, emailContent: string) => {
     html: emailContent,
   });
 
-  console.log('Email sent successfully!');
+  Logger.log('Email sent successfully!');
 };
