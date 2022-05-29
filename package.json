@@ -37,7 +37,6 @@
     "class-validator": "^0.13.2",
     "date-fns": "^2.28.0",
     "graphql": "^16.4.0",
-    "graphql-scalars": "^1.17.0",
     "lodash": "^4.17.21",
     "nodemailer": "^6.7.5",
     "passport": "^0.5.2",
