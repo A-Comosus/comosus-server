@@ -1,0 +1,1 @@
+export { setupSwagger } from './swagger';

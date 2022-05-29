@@ -4,6 +4,17 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## What does your file structure looks like?
+
+```js
+/src // @src/*
+  /common // @common | @common/*
+  /config
+  /resource // @resource | @resource/*
+  /schema // "Code first" generated schema
+  main.ts  //` App Entry Point
+```
+
 ## 🏃‍♂️ How to run this server?
 
 ### Setting up development environment
