@@ -21,6 +21,10 @@ export class UserService {
     return this.prisma.user.findFirst({ where: { username: _username } });
   }
 
+  async findByEmail(_email: string) {
+    return this.prisma.user.findFirst({ where: { email: _email } });
+  }
+
   async createPasswordResetLink(_id: string) {
     const { createHmac, randomBytes } = await import('crypto');
     const token = randomBytes(32).toString('hex');
