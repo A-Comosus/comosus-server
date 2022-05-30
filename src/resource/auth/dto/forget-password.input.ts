@@ -5,5 +5,5 @@ import { IsNotEmpty } from 'class-validator';
 export class ForgetPasswordInput {
   @Field()
   @IsNotEmpty()
-  username: string;
+  email: string;
 }

@@ -53,9 +53,9 @@ export class AuthService {
   }
 
   async forgetPasswordSendEmail(forgetPasswordInput: ForgetPasswordInput) {
-    const { username } = forgetPasswordInput;
-    const user = await this.userService.findByUsername(username);
-    const { id, email } = user;
+    const { email } = forgetPasswordInput;
+    const user = await this.userService.findByEmail(email);
+    const { id, username } = user;
     if (!user) {
       throw new Error(`User ${username} does not exist`);
     }
