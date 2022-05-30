@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
-import { PrismaClient } from '@prisma/client';
 import 'crypto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addHours = require('date-fns/addHours');
@@ -24,11 +23,11 @@ export class UserService {
 
   async createPasswordResetLink(_id: string) {
     const { createHmac, randomBytes } = await import('crypto');
-    const secret = process.env.CRYPTO_SECRET;
     const token = randomBytes(32).toString('hex');
-    const resetToken = createHmac('sha256', secret).update(token).digest('hex');
+    const resetToken = createHmac('sha256', process.env.CRYPTO_SECRET)
+      .update(token)
+      .digest('hex');
     const resetTokenExpires = addHours(new Date(), 1).toISOString();
-    console.log(resetTokenExpires);
     await this.prisma.user.update({
       where: {
         id: _id,
