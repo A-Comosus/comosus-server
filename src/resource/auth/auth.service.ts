@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@src/resource/user/entities/user.entity';
 import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterDetailInput } from './dto';
+import { ForgetPasswordInput, RegisterDetailInput } from './dto';
 import * as bcrypt from 'bcrypt';
 import { isNil } from 'lodash';
+import { sendEmail } from '@src/utils/sendEmail';
 
 @Injectable()
 export class AuthService {
@@ -49,5 +50,25 @@ export class AuthService {
     const password = await bcrypt.hash(_registerDetail.password, 10);
 
     return this.userService.create({ email, username, password });
+  }
+
+  async forgetPasswordSendEmail(forgetPasswordInput: ForgetPasswordInput) {
+    const { email } = forgetPasswordInput;
+    const user = await this.userService.findByEmail(email);
+    const { id, username } = user;
+    if (!user) {
+      throw new Error(`User ${username} does not exist`);
+    }
+    if (user) {
+      const resetLink = await this.userService.createPasswordResetLink(id);
+      const emailContent = `<b>Hi ${username} 👋</b> 
+                            <p>We've received a request to reset your password, please click the link: </p> 
+                            <a>${resetLink}</a>
+                            <br>
+                            <br>
+                            <b>A-COMOSUS🍍</b>`;
+      sendEmail(email, emailContent);
+    }
+    return true;
   }
 }

@@ -2,7 +2,12 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './guards';
-import { LoginDetailInput, LoginResponse, RegisterDetailInput } from './dto';
+import {
+  LoginDetailInput,
+  LoginResponse,
+  RegisterDetailInput,
+  ForgetPasswordInput,
+} from './dto';
 import { User } from '@src/resource/user/entities/user.entity';
 
 @Resolver()
@@ -18,5 +23,12 @@ export class AuthResolver {
   @Mutation(() => User)
   register(@Args('detail') _registerDetail: RegisterDetailInput) {
     return this.authService.register(_registerDetail);
+  }
+
+  @Mutation(() => Boolean)
+  forgetPasswordSendEmail(
+    @Args('detail') forgetPasswordInput: ForgetPasswordInput,
+  ) {
+    return this.authService.forgetPasswordSendEmail(forgetPasswordInput);
   }
 }
