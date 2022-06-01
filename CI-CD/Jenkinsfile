@@ -35,6 +35,14 @@ pipeline {
 
     
     stages {
+
+        stage('Cleanup docker space') {
+            steps {
+                echo 'Cleanup docker space'
+                sh 'docker system prune -f'
+            }
+        }
+
         stage('Git check out') {
             steps{
                 echo 'Git check out...'
@@ -42,6 +50,7 @@ pipeline {
                 git branch: env.BRANCH_NAME, url:'https://github.com/A-Comosus/comosus-server.git'
             }
         }
+
         stage('Install dependencies') {
             steps {
                 echo 'Install dependencies...'
