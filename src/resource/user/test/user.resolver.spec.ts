@@ -1,57 +1,47 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@common';
+import { UserResolver } from '../user.resolver';
 import { UserService } from '../user.service';
 import mockUserData from './mockUserData';
 
-// @TODO: Update this test once the pr is merged
+describe('UserResolver', () => {
+  let resolver: UserResolver;
 
-describe('UserService', () => {
-  let userService: UserService;
-
-  const mockPrismaClient = {
-    user: {
-      create: jest.fn(({ data }) =>
-        Promise.resolve({ id: Math.random(), ...data }),
-      ),
-      findMany: jest.fn(() => mockUserData),
-      findFirst: jest.fn(({ where: { username: _username } }) =>
-        mockUserData.filter(({ username }) => username === _username),
-      ),
-    },
+  const mockUserService = {
+    findAll: jest.fn(() => mockUserData),
+    findByUsername: jest.fn((_username: string) =>
+      mockUserData.find(({ username }) => username === _username),
+    ),
+    findByEmail: jest.fn((email) =>
+      mockUserData.find((user) => user.email === email),
+    ),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService, PrismaService],
+      providers: [UserResolver, UserService],
     })
-      .overrideProvider(PrismaService)
-      .useValue(mockPrismaClient)
+      .overrideProvider(UserService)
+      .useValue(mockUserService)
       .compile();
 
-    userService = module.get<UserService>(UserService);
+    resolver = module.get<UserResolver>(UserResolver);
   });
 
   it('should be defined', () => {
-    expect(userService).toBeDefined();
+    expect(resolver).toBeDefined();
   });
 
-  it('should create user', async () => {
-    const newUser = mockUserData[0];
-    expect(await userService.create(newUser)).toEqual({
-      id: expect.any(Number),
-      ...newUser,
-    });
+  it('should find all user', async () => {
+    expect(resolver.findAll()).toEqual(mockUserData);
   });
 
-  it('should find all users', async () => {
-    expect(await userService.findAll()).toBe(mockUserData);
+  it('should find user by username', async () => {
+    const user = mockUserData[1];
+    expect(resolver.findByUsername({ username: user.username })).toEqual(user);
   });
 
-  it('should find users by username', async () => {
+  it('should find user by email', async () => {
     const user = mockUserData[0];
-    const input = user.username;
-    const output = [user];
-
-    expect(await userService.findByUsername(input)).toEqual(output);
+    expect(resolver.findByEmail({ email: user.email })).toEqual(user);
   });
 });
