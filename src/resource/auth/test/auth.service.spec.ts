@@ -1,11 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
-import { PassportModule } from '@nestjs/passport';
-import { UserModule } from '@src/resource/user/user.module';
-import { JwtStrategy } from '../strategies';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -20,18 +17,9 @@ describe('AuthService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        PassportModule.register({ defaultStrategy: 'jwt' }),
-        UserModule,
-        JwtModule.register({
-          signOptions: { expiresIn: '60s' },
-          secret: 'secret', // TODO: store this as environment variable
-        }),
-      ],
       providers: [
         AuthService,
         { provide: UserService, useValue: mockUserService },
-        JwtStrategy,
         { provide: JwtService, useValue: mockJwtService },
       ],
     }).compile();
