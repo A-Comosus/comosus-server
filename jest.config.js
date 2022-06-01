@@ -13,7 +13,21 @@ const config = {
     '^@resource': ['<rootDir>/resource'],
     '^@resource/(.*)$': ['<rootDir>/resource/$1'],
   },
-  collectCoverageFrom: ['<rootDir>/**/*.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/resource/**/*.module.ts',
+    '<rootDir>/resource/**/*.resolver.ts',
+    '<rootDir>/resource/**/*.service.ts',
+    '<rootDir>/utils/**/*.ts',
+    '!<rootDir>/common/**/*.ts', // Might include this in the future
+  ],
+  coverageThreshold: {
+    global: {
+      // statements: 80,
+      // branches: 80,
+      // functions: 80,
+      // lines: 80,
+    },
+  },
   testEnvironment: 'node',
   verbose: true,
 };
