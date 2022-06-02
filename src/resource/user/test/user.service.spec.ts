@@ -39,6 +39,7 @@ describe('UserService', () => {
     const newUser = mockUserData[0];
     expect(await userService.create(newUser)).toEqual({
       id: expect.any(Number),
+      timeAcceptPolicy: expect.any(String),
       ...newUser,
     });
   });
