@@ -14,7 +14,7 @@ describe('UserService', () => {
       ),
       findMany: jest.fn(() => mockUserData),
       findFirst: jest.fn(({ where: { username: _username } }) =>
-        mockUserData.filter(({ username }) => username === _username),
+        mockUserData.find(({ username }) => username === _username),
       ),
       update: jest.fn(),
     },
@@ -49,10 +49,7 @@ describe('UserService', () => {
 
   it('should find users by username', async () => {
     const user = mockUserData[0];
-    const input = user.username;
-    const output = [user];
-
-    expect(await userService.findByUsername(input)).toEqual(output);
+    expect(await userService.findByUsername(user.username)).toEqual(user);
   });
 
   it('should create password reset link', async () => {
