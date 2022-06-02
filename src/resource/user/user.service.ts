@@ -10,7 +10,13 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(_createUserInput: CreateUserInput) {
-    return await this.prisma.user.create({ data: _createUserInput });
+    const newUserData = {
+      ..._createUserInput,
+      timeAcceptPolicy: new Date().toISOString(),
+    };
+    return await this.prisma.user.create({
+      data: newUserData,
+    });
   }
 
   async findAll() {
