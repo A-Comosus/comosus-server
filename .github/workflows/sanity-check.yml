@@ -18,11 +18,11 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - run: echo "🚚 All dependencies listed has been installed on the runner."
-      # - run: echo "🧪 Workflow will be running tests available in this branch."
+      - run: echo "🧪 Workflow will be running tests available in this branch."
 
-      # - name: Checking pull request for test
-      #   run: yarn test
-      # - run: echo "🧪 Testing completes!"
+      - name: Checking pull request for test
+        run: yarn test:cov
+      - run: echo "🧪 Testing completes!"
       - run: echo "📝 Workflow will now run a linter check."
 
       - name: Checking for linter error
