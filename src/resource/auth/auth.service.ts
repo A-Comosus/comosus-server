@@ -41,15 +41,19 @@ export class AuthService {
   }
 
   async register(_registerDetail: RegisterDetailInput) {
-    const { email, username } = _registerDetail;
+    const { email, username, acceptPolicy } = _registerDetail;
     const user = await this.userService.findByUsername(username);
     if (user) {
       throw new Error(`User ${username} already registered`);
     }
 
+    if (!acceptPolicy) {
+      throw new Error(`User ${username} did not accept policy`);
+    }
+
     const password = await bcrypt.hash(_registerDetail.password, 10);
 
-    return this.userService.create({ email, username, password });
+    return this.userService.create({ email, username, password, acceptPolicy });
   }
 
   async forgetPasswordSendEmail(forgetPasswordInput: ForgetPasswordInput) {
