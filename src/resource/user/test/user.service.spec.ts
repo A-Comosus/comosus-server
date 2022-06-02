@@ -52,6 +52,8 @@ describe('UserService', () => {
     expect(await userService.findByUsername(user.username)).toEqual(user);
   });
 
+  it.todo('should find user by email');
+
   it('should create password reset link', async () => {
     const user = mockUserData[0];
     // @Note: We can't really test if the resetToken was actually generated, so we are just mocking this function so that it don't fail the test

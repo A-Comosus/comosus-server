@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthResolver } from '../auth.resolver';
 import { AuthService } from '../auth.service';
 
-describe('AuthResolver', () => {
+describe('AuthResolver should be...', () => {
   let resolver: AuthResolver;
 
   const mockAuthService = {};
@@ -18,7 +18,11 @@ describe('AuthResolver', () => {
     resolver = module.get<AuthResolver>(AuthResolver);
   });
 
-  it('should be defined', () => {
+  it('defined', () => {
     expect(resolver).toBeDefined();
   });
+
+  it.todo('able to login');
+  it.todo('able to register');
+  it.todo('able to request password reset email ');
 });

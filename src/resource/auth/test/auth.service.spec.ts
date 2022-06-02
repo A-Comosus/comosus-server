@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
 
-describe('AuthService', () => {
+describe('AuthService should be...', () => {
   let service: AuthService;
 
   const mockUserService = {
@@ -27,7 +27,12 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  it('should be defined', () => {
+  it('defined', () => {
     expect(service).toBeDefined();
   });
+
+  it.todo('able to validate user');
+  it.todo('able to login');
+  it.todo('able to register');
+  it.todo('able to request password reset email');
 });
