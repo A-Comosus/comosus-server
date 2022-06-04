@@ -13,8 +13,20 @@ describe('UserService', () => {
         Promise.resolve({ id: Math.random(), ...data }),
       ),
       findMany: jest.fn(() => mockUserData),
-      findFirst: jest.fn(({ where: { username: _username } }) =>
-        mockUserData.find(({ username }) => username === _username),
+      findFirst: jest.fn(
+        ({
+          where: {
+            username: _username,
+            email: _email,
+            passwordResetToken: _passwordResetToken,
+          },
+        }) =>
+          mockUserData.find(
+            ({ username, email, passwordResetToken }) =>
+              username === _username ||
+              email === _email ||
+              passwordResetToken === _passwordResetToken,
+          ),
       ),
       update: jest.fn(),
     },
@@ -53,7 +65,10 @@ describe('UserService', () => {
     expect(await userService.findByUsername(user.username)).toEqual(user);
   });
 
-  it.todo('should find user by email');
+  it('should find user by email', async () => {
+    const user = mockUserData[0];
+    expect(await userService.findByEmail(user.email)).toEqual(user);
+  });
 
   it('should create password reset link', async () => {
     const user = mockUserData[0];
