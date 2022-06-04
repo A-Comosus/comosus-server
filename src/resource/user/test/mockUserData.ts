@@ -5,6 +5,8 @@ const mockUserData = [
     username: 'test-0',
     password: 'secret',
     acceptPolicy: true,
+    passwordResetToken: 'abc',
+    passwordResetTokenExpires: '2022-06-04T11:41:07.790Z',
   },
   {
     id: '1',
@@ -12,6 +14,8 @@ const mockUserData = [
     username: 'test-1',
     password: 'secret',
     acceptPolicy: true,
+    passwordResetToken: '123',
+    passwordResetTokenExpires: '2022-06-04T11:56:36.238Z',
   },
   {
     id: '2',
@@ -19,6 +23,8 @@ const mockUserData = [
     username: 'test-2',
     password: 'secret',
     acceptPolicy: false,
+    passwordResetToken: '1e1',
+    passwordResetTokenExpires: '2022-06-04T11:41:07.790Z',
   },
 ];
 
