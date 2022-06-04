@@ -20,6 +20,7 @@ export class AuthService {
     const user = await this.userService.findByUsername(_username);
     if (isNil(user)) {
       this.logger.error(`User ${_username} does not exist.`);
+      return;
     }
 
     const isValid = await bcrypt.compare(_password, user?.password);
@@ -27,9 +28,11 @@ export class AuthService {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
-    }
+    } else {
+      this.logger.error(`Credential does not match for user ${_username} `);
 
-    return null;
+      return;
+    }
   }
 
   async login(user: User) {
@@ -45,15 +48,19 @@ export class AuthService {
 
   async register(_registerDetail: RegisterDetailInput) {
     const { email, username, acceptPolicy } = _registerDetail;
-    this.logger.log(`Registering user ${username}...`);
+    this.logger.log(
+      `Registering {username: ${username}, email: ${email}} as new user...`,
+    );
 
     const user = await this.userService.findByUsername(username);
     if (user) {
-      this.logger.error(`User ${username} already registered`);
+      this.logger.error(`User ${username} already registered.`);
+      return;
     }
 
     if (!acceptPolicy) {
       this.logger.error(`User ${username} did not accept policy`);
+      return;
     }
 
     const password = await bcrypt.hash(_registerDetail.password, 10);
@@ -72,6 +79,7 @@ export class AuthService {
       this.logger.error(
         `User with email ${forgetPasswordInput.email} does not exist`,
       );
+      return;
     } else {
       const { id, username } = user;
       const resetLink = await this.userService.createPasswordResetLink(id);

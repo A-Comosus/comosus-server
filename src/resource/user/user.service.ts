@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import 'crypto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -7,9 +7,11 @@ import { PrismaService } from '@src/common';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async create(_createUserInput: CreateUserInput) {
+    this.logger.log(`Created user with username ${_createUserInput.username}.`);
     const newUserData = {
       ..._createUserInput,
       timeAcceptPolicy: new Date().toISOString(),
@@ -20,14 +22,17 @@ export class UserService {
   }
 
   async findAll() {
+    this.logger.log(`Returning data of all user registered.`);
     return await this.prisma.user.findMany();
   }
 
   async findByUsername(_username: string) {
+    this.logger.log(`Found data of user with username ${_username}`);
     return this.prisma.user.findFirst({ where: { username: _username } });
   }
 
   async findByEmail(_email: string) {
+    this.logger.log(`Found data of user with email ${_email}`);
     return this.prisma.user.findFirst({ where: { email: _email } });
   }
 
@@ -47,6 +52,7 @@ export class UserService {
         passwordResetTokenExpires: resetTokenExpires,
       },
     });
+    this.logger.log(`Create password reset token for user with id ${_id}.`);
     return `${process.env.CLIENT_BASE_URL}/reset-password/${resetToken}`;
   }
 }

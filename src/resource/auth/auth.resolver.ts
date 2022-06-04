@@ -20,7 +20,7 @@ export class AuthResolver {
   @UseGuards(GqlAuthGuard)
   login(@Args('detail') _loginDetail: LoginDetailInput, @Context() _context) {
     this.logger.log(
-      `Receiving request to login with ${_loginDetail.username}...`,
+      `Finishing request to login with ${_loginDetail.username}...`,
     );
     return this.authService.login(_context.user);
   }
