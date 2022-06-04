@@ -8,6 +8,8 @@ import { PrismaService, MailingService } from '@common';
 
 dotenv.config();
 
+const logger = new Logger('A-ComosusServer');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
@@ -21,7 +23,8 @@ async function bootstrap() {
   const mailingService = app.get(MailingService);
   mailingService.initMailingService();
 
-  await app.listen(parseInt(config.get('PORT'), 10) ?? 3100);
-  Logger.log(`Server listening on ${await app.getUrl()}`);
+  const port = parseInt(config.get('PORT'), 10) ?? 3100;
+  await app.listen(port);
+  logger.log(`Server listening on port ${port}`);
 }
 bootstrap();

@@ -1,9 +1,10 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('local') {
+  private readonly logger = new Logger(GqlAuthGuard.name);
   constructor() {
     super();
   }
@@ -16,6 +17,9 @@ export class GqlAuthGuard extends AuthGuard('local') {
    */
 
   getRequest(_context: ExecutionContext) {
+    this.logger.log(
+      `${GqlAuthGuard.name} is starting to validate authentication...`,
+    );
     const context = GqlExecutionContext.create(_context);
     const request = context.getContext();
     request.body = context.getArgs().detail;

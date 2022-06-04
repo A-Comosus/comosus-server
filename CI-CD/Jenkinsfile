@@ -151,7 +151,7 @@ pipeline {
         always {
             withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
                 deleteDir()
-                sh "docker rmi ${AWS_ECR_URL}:${IMAGE_VERSION}"
+                // sh "docker rmi ${AWS_ECR_URL}:${IMAGE_VERSION}"
             }
         }
     }

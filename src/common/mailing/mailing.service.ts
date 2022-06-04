@@ -22,7 +22,7 @@ export class MailingService {
   sendEmail = async (email: string, emailContent: string) => {
     this.transporter.verify(async (error, success) => {
       if (error) {
-        this.logger.error(error);
+        this.logger.error(`Failed to send email with ${error}`);
       }
       if (success) {
         this.transporter
@@ -37,7 +37,7 @@ export class MailingService {
             this.logger.log('Email sent successfully!');
           })
           .catch((error) => {
-            this.logger.error(error.message);
+            this.logger.error(`Failed to send email with ${error}`);
           });
       }
     });
