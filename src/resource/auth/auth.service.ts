@@ -16,6 +16,7 @@ export class AuthService {
   ) {}
 
   async validateUser(_username: string, _password: string): Promise<any> {
+    this.logger.log(`Validating user ${_username}...`);
     const user = await this.userService.findByUsername(_username);
     if (isNil(user)) {
       this.logger.error(`User ${_username} does not exist.`);
@@ -32,6 +33,7 @@ export class AuthService {
   }
 
   async login(user: User) {
+    this.logger.log(`Logged in user ${user.username}.`);
     return {
       accessToken: this.jwtService.sign({
         username: user.username,
@@ -43,6 +45,8 @@ export class AuthService {
 
   async register(_registerDetail: RegisterDetailInput) {
     const { email, username, acceptPolicy } = _registerDetail;
+    this.logger.log(`Registering user ${username}...`);
+
     const user = await this.userService.findByUsername(username);
     if (user) {
       this.logger.error(`User ${username} already registered`);
@@ -58,13 +62,18 @@ export class AuthService {
   }
 
   async forgetPasswordSendEmail(forgetPasswordInput: ForgetPasswordInput) {
+    this.logger.log(
+      `Sending password reset email to ${forgetPasswordInput.email}...`,
+    );
+
     const { email } = forgetPasswordInput;
     const user = await this.userService.findByEmail(email);
-    const { id, username } = user;
     if (!user) {
-      this.logger.error(`User ${username} does not exist`);
-    }
-    if (user) {
+      this.logger.error(
+        `User with email ${forgetPasswordInput.email} does not exist`,
+      );
+    } else {
+      const { id, username } = user;
       const resetLink = await this.userService.createPasswordResetLink(id);
       const emailContent = `<b>Hi ${username} 👋</b> 
                             <p>We've received a request to reset your password, please click the link: </p> 
