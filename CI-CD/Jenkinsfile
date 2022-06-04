@@ -58,12 +58,12 @@ pipeline {
             }
         }
 
-        // stage('Test') {
-        //     steps {
-        //         echo 'Testing..'
-        //         sh 'npm run test:coverage'
-        //     }
-        // }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                sh 'npm run test:cov'
+            }
+        }
         
         stage('Checking for linter error') {
             steps {

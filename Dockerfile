@@ -42,5 +42,9 @@ EXPOSE 3100
 
 ENV PORT 3100
 ENV DATABASE_URL mongodb+srv://admin:admin@cluster0.opmne.mongodb.net/a-comosus?retryWrites=true&w=majority
+ENV CRYPTO_SECRET a-comosus
+ENV SENDGRID_API_KEY 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
+ENV CLIENT_BASE_URL https://a-comosus.com
+
 
 CMD ["node", "dist/main"]

@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ForgetPasswordInput, RegisterDetailInput } from './dto';
 import * as bcrypt from 'bcrypt';
 import { isNil } from 'lodash';
-import { sendEmail } from '@src/utils/sendEmail';
+import { MailingService } from '@common';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +13,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailingService: MailingService,
   ) {}
 
   async validateUser(_username: string, _password: string): Promise<any> {
@@ -68,28 +69,23 @@ export class AuthService {
     return this.userService.create({ email, username, password, acceptPolicy });
   }
 
-  async forgetPasswordSendEmail(forgetPasswordInput: ForgetPasswordInput) {
-    this.logger.log(
-      `Sending password reset email to ${forgetPasswordInput.email}...`,
-    );
-
-    const { email } = forgetPasswordInput;
+  async forgetPasswordSendEmail({ email }: ForgetPasswordInput) {
     const user = await this.userService.findByEmail(email);
+
     if (!user) {
-      this.logger.error(
-        `User with email ${forgetPasswordInput.email} does not exist`,
-      );
+      this.logger.error(`User with email ${email} does not exist`);
       return;
     } else {
       const { id, username } = user;
       const resetLink = await this.userService.createPasswordResetLink(id);
       const emailContent = `<b>Hi ${username} 👋</b> 
-                            <p>We've received a request to reset your password, please click the link: </p> 
-                            <a>${resetLink}</a>
-                            <br>
-                            <br>
-                            <b>A-COMOSUS🍍</b>`;
-      sendEmail(email, emailContent);
+          <p>We've received a request to reset your password, please click the link: </p> 
+          <a>${resetLink}</a>
+          <br>
+          <br>
+          <b>A-COMOSUS🍍</b>`;
+      this.logger.log(`Sending password reset email to ${email}...`);
+      this.mailingService.sendEmail(email, emailContent);
     }
     return true;
   }
