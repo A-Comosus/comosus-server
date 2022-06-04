@@ -3,6 +3,8 @@ import { CreateUserInput } from './dto/create-user.input';
 import 'crypto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addHours = require('date-fns/addHours');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const compareAsc = require('date-fns/compareAsc');
 import { PrismaService } from '@src/common';
 
 @Injectable()
@@ -36,6 +38,24 @@ export class UserService {
     return this.prisma.user.findFirst({ where: { email: _email } });
   }
 
+  async findByResetPasswordToken(_resetToken: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { passwordResetToken: _resetToken },
+    });
+    const { passwordResetTokenExpires } = user;
+    const expire_time = Date.parse(passwordResetTokenExpires);
+    const now = new Date().getTime();
+    const compare = compareAsc(expire_time, now);
+    if (compare === 1) {
+      this.logger.log(`Password reset for user ${user.username}`);
+      return user;
+    }
+    if (compare !== 1) {
+      this.logger.error(`User ${user.username}'s resetPasswordToken expired`);
+      return null;
+    }
+  }
+
   async createPasswordResetLink(_id: string) {
     const { createHmac, randomBytes } = await import('crypto');
     const token = randomBytes(32).toString('hex');
@@ -54,5 +74,18 @@ export class UserService {
     });
     this.logger.log(`Create password reset token for user with id ${_id}.`);
     return `${process.env.CLIENT_BASE_URL}/reset-password/${resetToken}`;
+  }
+
+  async resetPassword(_id: string, _newPassword: string) {
+    return await this.prisma.user.update({
+      where: {
+        id: _id,
+      },
+      data: {
+        password: _newPassword,
+        passwordResetToken: '',
+        passwordResetTokenExpires: '',
+      },
+    });
   }
 }
