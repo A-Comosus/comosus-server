@@ -5,13 +5,14 @@ import { JwtService } from '@nestjs/jwt';
 import { ForgetPasswordInput, RegisterDetailInput } from './dto';
 import * as bcrypt from 'bcrypt';
 import { isNil } from 'lodash';
-import { sendEmail } from '@src/utils/sendEmail';
+import { MailingService } from '@common';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailingService: MailingService,
   ) {}
 
   async validateUser(_username: string, _password: string): Promise<any> {
@@ -56,13 +57,14 @@ export class AuthService {
     return this.userService.create({ email, username, password, acceptPolicy });
   }
 
-  async forgetPasswordSendEmail(forgetPasswordInput: ForgetPasswordInput) {
-    const { email } = forgetPasswordInput;
+  async forgetPasswordSendEmail({ email }: ForgetPasswordInput) {
     const user = await this.userService.findByEmail(email);
-    const { id, username } = user;
     if (!user) {
-      throw new Error(`User ${username} does not exist`);
+      throw new Error(`User with email ${email} does not exist`);
     }
+
+    const { id, username } = user;
+
     if (user) {
       const resetLink = await this.userService.createPasswordResetLink(id);
       const emailContent = `<b>Hi ${username} 👋</b> 
@@ -71,7 +73,7 @@ export class AuthService {
                             <br>
                             <br>
                             <b>A-COMOSUS🍍</b>`;
-      sendEmail(email, emailContent);
+      this.mailingService.sendEmail(email, emailContent);
     }
     return true;
   }
