@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 
+import { MailingService } from '@common';
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
 
@@ -14,6 +15,9 @@ describe('AuthService should be...', () => {
   const mockJwtService = {
     sign: jest.fn(),
   };
+  const mockMailingService = {
+    sendEmail: jest.fn(),
+  };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +25,7 @@ describe('AuthService should be...', () => {
         AuthService,
         { provide: UserService, useValue: mockUserService },
         { provide: JwtService, useValue: mockJwtService },
+        { provide: MailingService, useValue: mockMailingService },
       ],
     }).compile();
 
