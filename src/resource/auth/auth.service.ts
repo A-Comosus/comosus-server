@@ -2,7 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@src/resource/user/entities/user.entity';
 import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { ForgetPasswordInput, RegisterDetailInput } from './dto';
+import {
+  ForgetPasswordInput,
+  RegisterDetailInput,
+  ResetPasswordInput,
+} from './dto';
 import * as bcrypt from 'bcrypt';
 import { isNil } from 'lodash';
 import { MailingService } from '@common';
@@ -87,6 +91,20 @@ export class AuthService {
       this.logger.log(`Sending password reset email to ${email}...`);
       this.mailingService.sendEmail(email, emailContent);
     }
+    return true;
+  }
+
+  async resetPassword(_resetDetail: ResetPasswordInput) {
+    const { resetToken, password } = _resetDetail;
+    const user = await this.userService.findByResetPasswordToken(resetToken);
+    if (!user) {
+      this.logger.error('Invalid link or link expired');
+    }
+
+    const { id } = user;
+    const newPassword = await bcrypt.hash(password, 10);
+    this.logger.log(`Creating newPassword`);
+    this.userService.resetPassword(id, newPassword);
     return true;
   }
 }
