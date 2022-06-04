@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@src/resource/user/entities/user.entity';
 import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -9,6 +9,7 @@ import { sendEmail } from '@src/utils/sendEmail';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -17,7 +18,7 @@ export class AuthService {
   async validateUser(_username: string, _password: string): Promise<any> {
     const user = await this.userService.findByUsername(_username);
     if (isNil(user)) {
-      throw new Error(`User ${_username} does not exist.`);
+      this.logger.error(`User ${_username} does not exist.`);
     }
 
     const isValid = await bcrypt.compare(_password, user?.password);
@@ -44,11 +45,11 @@ export class AuthService {
     const { email, username, acceptPolicy } = _registerDetail;
     const user = await this.userService.findByUsername(username);
     if (user) {
-      throw new Error(`User ${username} already registered`);
+      this.logger.error(`User ${username} already registered`);
     }
 
     if (!acceptPolicy) {
-      throw new Error(`User ${username} did not accept policy`);
+      this.logger.error(`User ${username} did not accept policy`);
     }
 
     const password = await bcrypt.hash(_registerDetail.password, 10);
@@ -61,7 +62,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
     const { id, username } = user;
     if (!user) {
-      throw new Error(`User ${username} does not exist`);
+      this.logger.error(`User ${username} does not exist`);
     }
     if (user) {
       const resetLink = await this.userService.createPasswordResetLink(id);

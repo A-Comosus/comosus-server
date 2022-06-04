@@ -8,19 +8,20 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  private readonly logger = new Logger(PrismaService.name);
   async onModuleInit() {
     await this.$connect()
       .then(async () => {
-        Logger.log('Connection to database has been established');
+        this.logger.log('Connection to database has been established');
       })
       .catch((error) => {
-        Logger.error(error);
+        this.logger.error(error);
       });
   }
 
   async enableShutdownHooks(app: INestApplication) {
     this.$on('beforeExit', async () => {
-      Logger.log('Shutting down connection to database.');
+      this.logger.log('Shutting down connection to database.');
       await app.close();
     });
   }
