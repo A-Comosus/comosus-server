@@ -70,6 +70,13 @@ describe('UserService', () => {
     expect(await userService.findByEmail(user.email)).toEqual(user);
   });
 
+  it('should find user by resetPasswordToken', async () => {
+    const user = mockUserData[0];
+    expect(
+      await userService.findByResetPasswordToken(user.passwordResetToken),
+    ).toEqual(user);
+  });
+
   it('should create password reset link', async () => {
     const user = mockUserData[0];
     // @Note: We can't really test if the resetToken was actually generated, so we are just mocking this function so that it don't fail the test
@@ -84,4 +91,6 @@ describe('UserService', () => {
       `${process.env.CLIENT_BASE_URL}/reset-password/`,
     );
   });
+
+  // it.todo('it should reset password');
 });
