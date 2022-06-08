@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailingService } from '@common';
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
+import mockUsers from './mockAuthData';
 
 describe('AuthService should be...', () => {
   let service: AuthService;
@@ -11,6 +12,7 @@ describe('AuthService should be...', () => {
   const mockUserService = {
     create: jest.fn(),
     findByUsername: jest.fn(),
+    login: jest.fn(),
   };
   const mockJwtService = {
     sign: jest.fn(),
@@ -37,7 +39,12 @@ describe('AuthService should be...', () => {
   });
 
   it.todo('able to validate user');
-  it.todo('able to login');
+  it('able to login', async () => {
+    const user = mockUsers[0];
+    await expect(service.login(user)).resolves.toEqual({
+      user,
+    });
+  });
   it.todo('able to register');
   it.todo('able to request password reset email');
 });
