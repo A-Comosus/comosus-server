@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
@@ -7,9 +8,8 @@ import { UserModule, AuthModule } from '@resource';
 
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { PrismaService } from '@common';
 import { LinkModule } from '@resource/link';
+import { MailingService, PrismaService } from '@common';
 
 @Module({
   imports: [
@@ -27,6 +27,6 @@ import { LinkModule } from '@resource/link';
     AuthModule,
     LinkModule,
   ],
-  providers: [AppResolver, AppService, PrismaService],
+  providers: [AppResolver, AppService, PrismaService, MailingService],
 })
 export class AppModule {}

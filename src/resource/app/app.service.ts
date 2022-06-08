@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { App } from './app.entity';
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name);
   getServerInfo(): App {
-    // TODO: Server initialization validation goes here maybe
+    this.logger.log('Responding with server information...');
     return { status: 'Server is up' };
   }
 }

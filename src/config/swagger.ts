@@ -1,6 +1,8 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
+const logger = new Logger('SwaggerDoc');
+
 const config = new DocumentBuilder()
   .setTitle('A-Comosus')
   .setDescription('A-Comosus Monolithic Server APIs')
@@ -14,5 +16,5 @@ const config = new DocumentBuilder()
 export const setupSwagger = (_app: INestApplication) => {
   const swaggerDocument = SwaggerModule.createDocument(_app, config);
   SwaggerModule.setup('api', _app, swaggerDocument);
-  Logger.log('Swagger UI has been initialized');
+  logger.log('Swagger UI has been initialized');
 };

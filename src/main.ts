@@ -4,9 +4,11 @@ import { ConfigService } from '@nestjs/config';
 import * as dotenv from 'dotenv';
 import { AppModule } from './resource/app/app.module';
 import { setupSwagger } from './config';
-import { PrismaService } from '@common';
+import { PrismaService, MailingService } from '@common';
 
 dotenv.config();
+
+const logger = new Logger('A-ComosusServer');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,7 +20,11 @@ async function bootstrap() {
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
-  await app.listen(parseInt(config.get('PORT'), 10) ?? 3100);
-  Logger.log(`Server listening on ${await app.getUrl()}`);
+  const mailingService = app.get(MailingService);
+  mailingService.initMailingService();
+
+  const port = parseInt(config.get('PORT'), 10) ?? 3100;
+  await app.listen(port);
+  logger.log(`Server listening on port ${port}`);
 }
 bootstrap();
