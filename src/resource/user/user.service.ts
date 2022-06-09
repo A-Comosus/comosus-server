@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
+import { isNil } from 'lodash';
 import 'crypto';
+
+import { CreateUserInput } from './dto/create-user.input';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addHours = require('date-fns/addHours');
 import { PrismaService } from '@src/common';
@@ -24,6 +26,20 @@ export class UserService {
   async findAll() {
     this.logger.log(`Returning data of all user registered.`);
     return await this.prisma.user.findMany();
+  }
+
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      include: { links: true },
+    });
+
+    if (isNil(user)) {
+      this.logger.error(`Cannot found user with id ${id}`);
+    } else {
+      this.logger.log(`Found data of user with id ${id}`);
+      return user;
+    }
   }
 
   async findByUsername(_username: string) {
