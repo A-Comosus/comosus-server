@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class Link {
@@ -6,13 +6,19 @@ export class Link {
   id: string;
 
   @Field()
-  enabled: boolean;
+  isDraft: boolean;
 
   @Field()
+  isVisible: boolean;
+
+  @Field({ nullable: true })
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   url: string;
+
+  @Field({ nullable: true })
+  logoUrl: string;
 
   @Field()
   userId: string;
