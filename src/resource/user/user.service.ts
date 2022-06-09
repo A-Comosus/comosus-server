@@ -44,7 +44,10 @@ export class UserService {
 
   async findByUsername(_username: string) {
     this.logger.log(`Found data of user with username ${_username}`);
-    return this.prisma.user.findFirst({ where: { username: _username } });
+    return this.prisma.user.findFirst({
+      where: { username: _username },
+      include: { links: { where: { isDraft: false } } },
+    });
   }
 
   async findByEmail(_email: string) {

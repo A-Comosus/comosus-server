@@ -26,7 +26,7 @@ export class UserResolver {
     return this.userService.findById(id);
   }
 
-  @Query(() => User, { name: 'userByUsername' })
+  @Query(() => User, { name: 'findUserByUsername' })
   @UseGuards(JwtAuthGuard)
   findByUsername(@Args('username') { username }: FindByUsernameArgs) {
     this.logger.log(
