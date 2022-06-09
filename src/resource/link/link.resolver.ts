@@ -30,6 +30,7 @@ export class LinkResolver {
 
   @Mutation(() => Boolean)
   updateLinkUrl(@Args('data') { id, url }: UpdateLinkUrlInput) {
+    this.logger.log(`Receiving request to update url of link ${id}`);
     return this.linkService.updateLinkUrl(id, url);
   }
 
@@ -37,7 +38,7 @@ export class LinkResolver {
   updateLinkVisibility(
     @Args('data') { id, isVisible }: UpdateLinkVisibilityInput,
   ) {
-    this.logger.log(`Toggle visibility of link ${id}`);
+    this.logger.log(`Receiving request to update visibility of link ${id}`);
     return this.linkService.update(id, { isVisible });
   }
 
