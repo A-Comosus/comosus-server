@@ -5,13 +5,5 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateLinkInput {
   @Field()
   @IsNotEmpty()
-  title: string;
-
-  @Field()
-  @IsNotEmpty()
-  url: string;
-
-  @Field()
-  @IsNotEmpty()
   userId: string;
 }
