@@ -46,7 +46,7 @@ export class UserService {
     this.logger.log(`Found data of user with username ${_username}`);
     return this.prisma.user.findFirst({
       where: { username: _username },
-      include: { links: { where: { isDraft: false } } },
+      include: { links: { where: { isDraft: false, isVisible: true } } },
     });
   }
 
