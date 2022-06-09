@@ -1,33 +1,37 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Logger } from '@nestjs/common';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
+
 import { LinkService } from './link.service';
 import { Link } from './entities/link.entity';
 import {
   CreateLinkInput,
+  CreateLinkResponse,
   DeleteLinkInput,
+  UpdateLinkUrlInput,
+  UpdateLinkVisibilityInput,
 } from './dto';
 
 @Resolver(() => Link)
 export class LinkResolver {
+  private readonly logger = new Logger(LinkResolver.name);
   constructor(private readonly linkService: LinkService) {}
 
-  @Mutation(() => Link)
-  createLink(@Args('data') _createLinkInput: CreateLinkInput) {
-    return this.linkService.create(_createLinkInput);
+  @Mutation(() => CreateLinkResponse)
+  async createLink(@Args('data') _createLinkInput: CreateLinkInput) {
+    return await this.linkService.create(_createLinkInput);
   }
 
-  @Query(() => [Link], { name: 'link' })
-  findAll() {
-    return this.linkService.findAll();
+  @Mutation(() => Boolean)
+  updateLinkUrl(@Args('data') { id, url }: UpdateLinkUrlInput) {
+    return this.linkService.updateLinkUrl(id, url);
   }
 
-  @Query(() => Link, { name: 'link' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.linkService.findOne(id);
-  }
-
-  @Mutation(() => Link)
-  updateLink(@Args('data') _updateLinkInput: UpdateLinkInput) {
-    return this.linkService.update(_updateLinkInput.id, _updateLinkInput);
+  @Mutation(() => Boolean)
+  updateLinkVisibility(
+    @Args('data') { id, isVisible }: UpdateLinkVisibilityInput,
+  ) {
+    this.logger.log(`Toggle visibility of link ${id}`);
+    return this.linkService.update(id, { isVisible });
   }
 
   @Mutation(() => Boolean, { name: 'deleteLinkById' })
