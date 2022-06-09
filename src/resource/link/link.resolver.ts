@@ -1,7 +1,10 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { LinkService } from './link.service';
 import { Link } from './entities/link.entity';
-import { CreateLinkInput, UpdateLinkInput } from './dto';
+import {
+  CreateLinkInput,
+  DeleteLinkInput,
+} from './dto';
 
 @Resolver(() => Link)
 export class LinkResolver {
@@ -27,8 +30,9 @@ export class LinkResolver {
     return this.linkService.update(_updateLinkInput.id, _updateLinkInput);
   }
 
-  @Mutation(() => Link)
-  removeLink(@Args('id', { type: () => Int }) id: number) {
-    return this.linkService.remove(id);
+  @Mutation(() => Boolean, { name: 'deleteLinkById' })
+  deleteLink(@Args('data') { id }: DeleteLinkInput) {
+    this.logger.log(`Receiving request to delete link ${id}`);
+    return this.linkService.delete(id);
   }
 }

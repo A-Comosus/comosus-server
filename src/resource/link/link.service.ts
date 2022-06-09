@@ -40,7 +40,14 @@ export class LinkService {
     return updatedLink;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} link`;
+  async delete(id: string) {
+    const linkRemoved = await this.prisma.link.delete({ where: { id } });
+
+    if (isNil(linkRemoved)) {
+      this.logger.error(`Errored when deleting link with id ${id}.`);
+    } else {
+      this.logger.log(`Deleted link with id ${id}.`);
+      return true;
+    }
   }
 }
