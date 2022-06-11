@@ -1,7 +1,7 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-@InputType()
-export class UpdateLinkInput {
+@ObjectType()
+export class UpdateLinkResponse {
   @Field()
   id: string;
 

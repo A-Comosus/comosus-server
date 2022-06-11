@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { isNil } from 'lodash';
+import * as _ from 'lodash';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@src/common';
 import { HttpService } from '@nestjs/axios';
@@ -34,7 +34,35 @@ export class LinkService {
     return { id: newLink.id };
   }
 
-  async update(id: string, updatedData: UpdateLinkInput) {
+  async update({ id, isVisible, title, url }: UpdateLinkInput) {
+    const linkToBeUpdated = await this.findLinkById(id);
+
+    const updatedData = {
+      isDraft: true,
+      isVisible,
+      title,
+      url,
+      logoUrl: linkToBeUpdated.logoUrl,
+    };
+
+    // Validate url if it's different to the existing url.
+    if (!_.isEqual(url, linkToBeUpdated.url) && !_.isEmpty(url)) {
+      const {
+        title,
+        site: { logo },
+      } = await this.validateUrl(url);
+
+      // Use the extracted title if the user did not specify one.
+      if (_.isEmpty(updatedData.title)) {
+        updatedData.title = title;
+      }
+      updatedData.logoUrl = logo;
+    }
+
+    // Check if link can be published
+    updatedData.isDraft =
+      _.isEmpty(updatedData.title) || _.isEmpty(updatedData.url) ? true : false;
+
     const updatedLink = await this.prisma.link.update({
       where: { id },
       data: {
@@ -45,33 +73,24 @@ export class LinkService {
 
     if (updatedLink) {
       this.logger.log(`Updated link ${id}.`);
-      this.validateLink(id);
-      return true;
+      return updatedLink;
     } else {
       this.logger.error(`Errored when updating link ${id}.`);
-      return false;
     }
   }
 
-  async validateLink(id: string) {
-    const linkToValidate = await this.prisma.link.findUnique({
-      where: { id },
-    });
+  async findLinkById(id: string) {
+    this.logger.log(`Attempting to find link ${id}`);
+    const link = await this.prisma.link.findUnique({ where: { id } });
 
-    const { title, url } = linkToValidate;
-    await this.prisma.link.update({
-      where: { id },
-      data: { isDraft: isNil(title) && isNil(url) ? true : false },
-    });
+    if (_.isNil(link)) {
+      this.logger.error(`Cannot find link ${id}`);
+    } else {
+      return link;
+    }
   }
 
-  async updateLinkUrl(id: string, url: string) {
-    const linkToUpdate = await this.prisma.link.findUnique({ where: { id } });
-
-    if (isNil(linkToUpdate)) {
-      this.logger.error(`Cannot find link ${id}.`);
-    }
-
+  async validateUrl(url: string) {
     this.logger.log(`Validating url ${url} received..`);
     const encodedUrl = encodeURIComponent(url);
     const { data, status } = await this.httpService
@@ -92,24 +111,15 @@ export class LinkService {
     if (result.status === UrlMeta.RESULT_ERROR) {
       this.logger.error(`Failed to validate url. [Message: ${result.reason}]`);
     } else {
-      this.logger.log(`Url validated, Updating it to link ${id}`);
-      const {
-        site: { logo },
-        title,
-      } = meta;
-
-      return await this.update(id, {
-        url,
-        title: linkToUpdate.title ?? title,
-        logoUrl: logo ?? '',
-      });
+      this.logger.log(`Url validated.`);
+      return meta;
     }
   }
 
   async delete(id: string) {
     const linkRemoved = await this.prisma.link.delete({ where: { id } });
 
-    if (isNil(linkRemoved)) {
+    if (_.isNil(linkRemoved)) {
       this.logger.error(`Errored when deleting link with id ${id}.`);
     } else {
       this.logger.log(`Deleted link with id ${id}.`);

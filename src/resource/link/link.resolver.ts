@@ -6,10 +6,9 @@ import { Link } from './entities/link.entity';
 import {
   CreateLinkInput,
   CreateLinkResponse,
+  UpdateLinkInput,
+  UpdateLinkResponse,
   DeleteLinkInput,
-  UpdateLinkTitleInput,
-  UpdateLinkUrlInput,
-  UpdateLinkVisibilityInput,
 } from './dto';
 
 @Resolver(() => Link)
@@ -22,24 +21,12 @@ export class LinkResolver {
     return await this.linkService.create(_createLinkInput);
   }
 
-  @Mutation(() => Boolean)
-  updateLinkTitle(@Args('data') { id, title }: UpdateLinkTitleInput) {
-    this.logger.log(`Receiving request to update title of link ${id}`);
-    return this.linkService.update(id, { title });
-  }
-
-  @Mutation(() => Boolean)
-  updateLinkUrl(@Args('data') { id, url }: UpdateLinkUrlInput) {
-    this.logger.log(`Receiving request to update url of link ${id}`);
-    return this.linkService.updateLinkUrl(id, url);
-  }
-
-  @Mutation(() => Boolean)
-  updateLinkVisibility(
-    @Args('data') { id, isVisible }: UpdateLinkVisibilityInput,
-  ) {
-    this.logger.log(`Receiving request to update visibility of link ${id}`);
-    return this.linkService.update(id, { isVisible });
+  @Mutation(() => UpdateLinkResponse)
+  updateLink(@Args('data') updateLinkInput: UpdateLinkInput) {
+    this.logger.log(
+      `Receiving request to update title of link ${updateLinkInput.id}`,
+    );
+    return this.linkService.update(updateLinkInput);
   }
 
   @Mutation(() => Boolean, { name: 'deleteLinkById' })
