@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Link } from '@src/resource/link/entities/link.entity';
+import { Link } from '@src/resource/link';
 
 @ObjectType()
 export class User {
