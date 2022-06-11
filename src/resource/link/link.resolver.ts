@@ -32,6 +32,6 @@ export class LinkResolver {
   @Mutation(() => Boolean, { name: 'deleteLinkById' })
   deleteLink(@Args('data') { id }: DeleteLinkInput) {
     this.logger.log(`Receiving request to delete link ${id}`);
-    return this.linkService.delete(id);
+    return this.linkService.deleteById(id);
   }
 }

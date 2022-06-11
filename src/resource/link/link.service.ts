@@ -116,7 +116,7 @@ export class LinkService {
     }
   }
 
-  async delete(id: string) {
+  async deleteById(id: string) {
     const linkRemoved = await this.prisma.link.delete({ where: { id } });
 
     if (_.isNil(linkRemoved)) {
