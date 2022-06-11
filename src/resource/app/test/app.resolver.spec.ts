@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
+import { JwtAuthGuard } from '@resource/auth/guards';
 import { AppResolver } from '../app.resolver';
 import { AppService } from '../app.service';
 
@@ -9,13 +11,18 @@ describe('AppResolver', () => {
     getServerInfo: jest.fn().mockReturnValue({ status: 'Server is up' }),
   };
 
+  const mockJwtAuthGuard = jest.fn(() => true);
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AppResolver,
         { provide: AppService, useValue: mockAppService },
       ],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue(mockJwtAuthGuard)
+      .compile();
 
     resolver = module.get<AppResolver>(AppResolver);
   });
