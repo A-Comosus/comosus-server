@@ -40,7 +40,7 @@ export class LinkService {
     const updatedData = {
       isDraft: true,
       isVisible,
-      title,
+      title: _.isEmpty(title) ? linkToBeUpdated.title : title,
       url,
       logoUrl: linkToBeUpdated.logoUrl,
     };
