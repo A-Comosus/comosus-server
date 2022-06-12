@@ -101,7 +101,7 @@ pipeline {
             steps {
                 echo 'build image with ecr tage...'
                 withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
-                    sh "docker build  -t ${AWS_ECR_URL}:${IMAGE_VERSION} ."
+                    sh "docker build --build-arg D_URL=${DATABASE_URL} --build-arg C_SECRET=${CRYPTO_SECRET} --build-arg S_API_KEY=${SENDGRID_API_KEY} -t ${AWS_ECR_URL}:${IMAGE_VERSION} ."
                     sh "docker run -p 3100:3100 ${AWS_ECR_URL}:${IMAGE_VERSION}"
                 }
                 //--build-arg D_URL=$DATABASE_URL --build-arg C_SECRET=$CRYPTO_SECRET --build-arg S_API_KEY=$SENDGRID_API_KEY 
