@@ -45,7 +45,7 @@ pipeline {
                 git branch: env.BRANCH_NAME, url:'https://github.com/A-Comosus/comosus-server.git'
             }
         }
-
+        /*
         stage('Install dependencies') {
             steps {
                 echo 'Install dependencies...'
@@ -88,7 +88,7 @@ pipeline {
         //         sh
         //     }
         // }
-
+        */
         stage('Build and Upload Image to ECR') {
             
             when {
