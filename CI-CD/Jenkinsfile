@@ -45,7 +45,7 @@ pipeline {
                 git branch: env.BRANCH_NAME, url:'https://github.com/A-Comosus/comosus-server.git'
             }
         }
-        /*
+
         stage('Install dependencies') {
             steps {
                 echo 'Install dependencies...'
@@ -88,7 +88,7 @@ pipeline {
         //         sh
         //     }
         // }
-        */
+
         stage('Build and Upload Image to ECR') {
             
             when {
@@ -101,11 +101,9 @@ pipeline {
             steps {
                 echo 'build image with ecr tage...'
                 withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
-                    sh("docker build --build-arg C_SECRET=$CRYPTO_SECRET --build-arg S_API_KEY=${SENDGRID_API_KEY} -t ${AWS_ECR_URL}:${IMAGE_VERSION} .")
-                    sh "docker run -p 3100:3100 ${AWS_ECR_URL}:${IMAGE_VERSION}"
+                    sh("docker build  -t ${AWS_ECR_URL}:${IMAGE_VERSION} .")
                 }
-                //--build-arg D_URL=$DATABASE_URL --build-arg C_SECRET=$CRYPTO_SECRET --build-arg S_API_KEY=$SENDGRID_API_KEY 
-                /*
+                
                 echo 'upload to ECR'
                 withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
                     withAWS(region: "${AWS_ECR_REGION}", credentials: 'AWS_Credentials') {
@@ -115,10 +113,10 @@ pipeline {
                             docker.image("${AWS_ECR_URL}:${IMAGE_VERSION}").push()
                         }
                     }
-                }*/
+                }
             }
         }
-        /*
+
         stage('Deploy to eks') {
 
             when {
@@ -138,7 +136,7 @@ pipeline {
 
                 echo 'inital terraform'
                 withAWS(region: "${AWS_ECR_REGION}", credentials:'eks-jenkins-update-account') {
-                    dir("eks-cluster") {
+                    dir("kubernetes-config") {
                         sh 'terraform init'
                     }
                 }
@@ -146,14 +144,14 @@ pipeline {
                 echo 'terraform apply'
                 withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
                     withAWS(region: "${AWS_ECR_REGION}", credentials:'eks-jenkins-update-account') {
-                        dir("eks-cluster") {
+                        dir("kubernetes-config") {
                            script { 
                               sh("terraform apply -var=\'backend-image=${AWS_ECR_URL}:${IMAGE_VERSION}\' --auto-approve") 
                            }
                         }
                     }
                 }
-            }*/
+            }
     }
 
     post {
