@@ -34,6 +34,11 @@ export class LinkService {
     return { id: newLink.id };
   }
 
+  async findLinksOfUserByUserId(userId: string) {
+    this.logger.log(`Found and returning links of user ${userId}...`);
+    return await this.prisma.link.findMany({ where: { userId } });
+  }
+
   async update({ id, isVisible, title, url }: UpdateLinkInput) {
     const linkToBeUpdated = await this.findLinkById(id);
 
