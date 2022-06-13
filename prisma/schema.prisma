@@ -19,4 +19,6 @@ model User {
   timeAcceptPolicy String
   passwordResetToken String?
   passwordResetTokenExpires String?
+  createdAt String
+  updatedAt String
 }
