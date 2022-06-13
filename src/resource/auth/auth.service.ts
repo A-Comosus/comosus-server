@@ -104,15 +104,13 @@ export class AuthService {
       const { id, passwordResetTokenExpires } = user;
       const expire_time = Date.parse(passwordResetTokenExpires);
       const now = new Date().getTime();
-      const compare = compareAsc(expire_time, now);
-      if (compare === 1) {
+      if (compareAsc(expire_time, now) === 1) {
         const newPassword = await bcrypt.hash(password, 10);
         this.logger.log(`Creating newPassword for user ${user.username}`);
         return this.userService.resetPassword(id, newPassword);
-      }
-      if (compare !== 1) {
+      } else {
         this.logger.error(`User ${user.username}'s resetPasswordToken expired`);
-        return null;
+        return false;
       }
     }
   }
