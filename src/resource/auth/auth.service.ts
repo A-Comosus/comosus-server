@@ -94,8 +94,7 @@ export class AuthService {
     return true;
   }
 
-  async resetPassword(_resetDetail: ResetPasswordInput) {
-    const { resetToken, password } = _resetDetail;
+  async resetPassword({ resetToken, password }: ResetPasswordInput) {
     const user = await this.userService.findByResetPasswordToken(resetToken);
     if (!user) {
       this.logger.error('Invalid link or link expired');
