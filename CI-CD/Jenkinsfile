@@ -77,7 +77,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building....'
-                sh 'yarn prisma generate'
+                // sh 'yarn prisma generate'
+                sh 'yarn prisma db push'
                 sh 'yarn build'
             }
         }
