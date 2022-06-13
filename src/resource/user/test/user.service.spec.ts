@@ -51,6 +51,8 @@ describe('UserService', () => {
     const newUser = mockUserData[0];
     expect(await userService.create(newUser)).toEqual({
       id: expect.any(Number),
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String),
       timeAcceptPolicy: expect.any(String),
       ...newUser,
     });
@@ -91,6 +93,4 @@ describe('UserService', () => {
       `${process.env.CLIENT_BASE_URL}/reset-password/`,
     );
   });
-
-  // it.todo('it should reset password');
 });
