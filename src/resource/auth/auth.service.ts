@@ -8,6 +8,8 @@ import {
   ResetPasswordInput,
 } from './dto';
 import * as bcrypt from 'bcrypt';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const compareAsc = require('date-fns/compareAsc');
 import { isNil } from 'lodash';
 import { MailingService } from '@common';
 
@@ -98,12 +100,20 @@ export class AuthService {
     const user = await this.userService.findByResetPasswordToken(resetToken);
     if (!user) {
       this.logger.error('Invalid link or link expired');
+    } else {
+      const { id, passwordResetTokenExpires } = user;
+      const expire_time = Date.parse(passwordResetTokenExpires);
+      const now = new Date().getTime();
+      const compare = compareAsc(expire_time, now);
+      if (compare === 1) {
+        const newPassword = await bcrypt.hash(password, 10);
+        this.logger.log(`Creating newPassword for user ${user.username}`);
+        return this.userService.resetPassword(id, newPassword);
+      }
+      if (compare !== 1) {
+        this.logger.error(`User ${user.username}'s resetPasswordToken expired`);
+        return null;
+      }
     }
-
-    const { id } = user;
-    const newPassword = await bcrypt.hash(password, 10);
-    this.logger.log(`Creating newPassword`);
-    this.userService.resetPassword(id, newPassword);
-    return true;
   }
 }

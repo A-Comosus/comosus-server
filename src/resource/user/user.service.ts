@@ -3,8 +3,6 @@ import { CreateUserInput } from './dto/create-user.input';
 import 'crypto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addHours = require('date-fns/addHours');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const compareAsc = require('date-fns/compareAsc');
 import { PrismaService } from '@src/common';
 
 @Injectable()
@@ -39,21 +37,9 @@ export class UserService {
   }
 
   async findByResetPasswordToken(_resetToken: string) {
-    const user = await this.prisma.user.findFirst({
+    return this.prisma.user.findFirst({
       where: { passwordResetToken: _resetToken },
     });
-    const { passwordResetTokenExpires } = user;
-    const expire_time = Date.parse(passwordResetTokenExpires);
-    const now = new Date().getTime();
-    const compare = compareAsc(expire_time, now);
-    if (compare === 1) {
-      this.logger.log(`Password reset for user ${user.username}`);
-      return user;
-    }
-    if (compare !== 1) {
-      this.logger.error(`User ${user.username}'s resetPasswordToken expired`);
-      return null;
-    }
   }
 
   async createPasswordResetLink(_id: string) {
@@ -77,6 +63,7 @@ export class UserService {
   }
 
   async resetPassword(_id: string, _newPassword: string) {
+    this.logger.log(`Password reset successfully`);
     return await this.prisma.user.update({
       where: {
         id: _id,
