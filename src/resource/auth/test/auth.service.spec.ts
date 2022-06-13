@@ -13,6 +13,10 @@ describe('AuthService should be...', () => {
     create: jest.fn(),
     findByUsername: jest.fn(),
     login: jest.fn(),
+    findByEmail: jest.fn(),
+    register: jest.fn(),
+    forgetPasswordSendEmail: jest.fn(),
+    resetPassword: jest.fn(),
   };
   const mockJwtService = {
     sign: jest.fn(),
@@ -39,12 +43,18 @@ describe('AuthService should be...', () => {
   });
 
   it.todo('able to validate user');
+
   it('able to login', async () => {
     const user = mockUsers[0];
-    await expect(service.login(user)).resolves.toEqual({
+    expect(service.login(user)).resolves.toEqual({
       user,
     });
   });
-  it.todo('able to register');
-  it.todo('able to request password reset email');
+
+  it('able to register', async () => {
+    const { email, username, password, acceptPolicy } = mockUsers[1];
+    expect(
+      service.register({ email, username, password, acceptPolicy }),
+    ).resolves.toEqual(undefined);
+  });
 });
