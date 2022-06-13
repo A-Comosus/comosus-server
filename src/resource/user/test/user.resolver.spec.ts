@@ -14,11 +14,6 @@ describe('UserResolver', () => {
     findByEmail: jest.fn((email) =>
       mockUserData.find((user) => user.email === email),
     ),
-    findByResetPasswordToken: jest.fn((passwordResetToken) =>
-      mockUserData.find(
-        (user) => user.passwordResetToken === passwordResetToken,
-      ),
-    ),
   };
 
   beforeEach(async () => {
@@ -48,14 +43,5 @@ describe('UserResolver', () => {
   it('should find user by email', async () => {
     const user = mockUserData[0];
     expect(resolver.findByEmail({ email: user.email })).toEqual(user);
-  });
-
-  it('should find user by resetPasswordToken', async () => {
-    const user = mockUserData[0];
-    expect(
-      resolver.findByResetPasswordToken({
-        resetPasswordToken: user.passwordResetToken,
-      }),
-    ).toEqual(user);
   });
 });
