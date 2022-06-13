@@ -30,7 +30,6 @@ export class UserService {
   async findById(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      include: { links: true },
     });
 
     if (isNil(user)) {
