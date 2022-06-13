@@ -11,6 +11,7 @@ import {
   ForgetPasswordInput,
   ResetPasswordInput,
 } from './dto';
+import { User } from '../user/entities/user.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -44,7 +45,7 @@ export class AuthResolver {
     return this.authService.forgetPasswordSendEmail(_forgetPasswordInput);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => User)
   resetPassword(@Args('detail') resetPasswordInput: ResetPasswordInput) {
     this.logger.log(`Receiving request to reset password`);
     return this.authService.resetPassword(resetPasswordInput);
