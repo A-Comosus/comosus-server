@@ -8,9 +8,9 @@ export class FindLinksOfUserByUserIdResponse {
   @Field()
   isVisible: boolean;
 
-  @Field()
+  @Field({ nullable: true })
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   url: string;
 }
