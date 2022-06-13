@@ -1,10 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { isNil } from 'lodash';
+import { addHours } from 'date-fns';
 import 'crypto';
 
 import { CreateUserInput } from './dto/create-user.input';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const addHours = require('date-fns/addHours');
 import { PrismaService } from '@src/common';
 
 @Injectable()
