@@ -3,11 +3,7 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '@src/resource/auth/guards';
 import { Logger, UseGuards } from '@nestjs/common';
-import {
-  FindByUsernameArgs,
-  FindByEmailArgs,
-  FindByResetPasswordTokenArgs,
-} from './dto';
+import { FindByUsernameArgs, FindByEmailArgs } from './dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -37,15 +33,5 @@ export class UserResolver {
   findByEmail(@Args('email') { email }: FindByEmailArgs) {
     this.logger.log(`Receiving request to find user with email ${email}...`);
     return this.userService.findByEmail(email);
-  }
-
-  @Query(() => User, { name: 'userByResetPasswordToken' })
-  @UseGuards(JwtAuthGuard)
-  findByResetPasswordToken(
-    @Args('resetPasswordToken')
-    { resetPasswordToken }: FindByResetPasswordTokenArgs,
-  ) {
-    this.logger.log(`Receiving request to find user with resetPasswordToken`);
-    return this.userService.findByResetPasswordToken(resetPasswordToken);
   }
 }
