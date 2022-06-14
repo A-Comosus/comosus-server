@@ -6,6 +6,9 @@ export class FindLinksOfUserByUserIdResponse {
   id: string;
 
   @Field()
+  isDraft: boolean;
+
+  @Field()
   isVisible: boolean;
 
   @Field({ nullable: true })
