@@ -8,10 +8,10 @@ const config = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
     '^@src/(.*)$': ['<rootDir>/$1'],
-    '^@common': ['<rootDir>/common'],
     '^@common/(.*)$': ['<rootDir>/common/$1'],
-    '^@resource': ['<rootDir>/resource'],
+    '^@common': ['<rootDir>/common'],
     '^@resource/(.*)$': ['<rootDir>/resource/$1'],
+    '^@resource': ['<rootDir>/resource'],
   },
   collectCoverageFrom: [
     '<rootDir>/resource/**/*.module.ts',
