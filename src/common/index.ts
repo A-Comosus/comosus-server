@@ -9,3 +9,7 @@ export { MailingService } from './mailing/mailing.service';
 // CustomLogger
 export { CustomLoggerModule } from './logger/logger.module';
 export { CustomLoggerService } from './logger/logger.service';
+
+// AxiosService
+export { AxiosModule } from './axios/axios.module';
+export { AxiosService } from './axios/axios.service';
