@@ -1,9 +1,9 @@
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as _ from 'lodash';
 import { PrismaService, AxiosService } from '@src/common';
 
 import { CreateLinkInput, CreateLinkResponse, UpdateLinkInput } from './dto';
-import { UrlMeta } from '@src/constants';
+
 @Injectable()
 export class LinkService {
   private readonly logger = new Logger(LinkService.name);
@@ -51,7 +51,7 @@ export class LinkService {
       const {
         title,
         site: { logo },
-      } = await this.validateUrl(url);
+      } = await this.axiosService.validateUrl(url);
 
       // Use the extracted title if the user did not specify one.
       if (_.isEmpty(updatedData.title)) {
@@ -88,23 +88,6 @@ export class LinkService {
       this.logger.error(`Cannot find link ${id}`);
     } else {
       return link;
-    }
-  }
-
-  async validateUrl(url: string) {
-    this.logger.log(`Validating url ${url} received..`);
-    const { data, status } = await this.axiosService.validateUrl(url);
-
-    if (status !== HttpStatus.OK)
-      this.logger.error('Request errored with Url Meta API');
-
-    const { result, meta } = data;
-
-    if (result.status === UrlMeta.RESULT_ERROR) {
-      this.logger.error(`Failed to validate url. [Message: ${result.reason}]`);
-    } else {
-      this.logger.log(`Url validated.`);
-      return meta;
     }
   }
 

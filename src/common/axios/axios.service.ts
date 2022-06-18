@@ -1,7 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { AxiosResponse } from 'axios';
 
 import { UrlMeta } from '@src/constants/UrlMeta';
 import { EnvVar, NodeEnv } from '@src/constants';
@@ -26,20 +25,34 @@ export class AxiosService {
     }
   }
 
-  validateUrl(url: string): Promise<AxiosResponse<UrlMetaResponse>> {
+  async validateUrl(url: string) {
+    this.logger.log(`Validating url ${url} with UrlMeta API..`);
     const encodedUrl = encodeURIComponent(url);
     const encodedAuthString = Buffer.from(
       this.configService.get(EnvVar.UrlMetaAuthString),
     ).toString('base64');
     const authorization = `Basic ${encodedAuthString}`;
 
-    return this.httpService.axiosRef.get<UrlMetaResponse>(
-      `${UrlMeta.API_URL}/?url=${encodedUrl}`,
-      {
-        headers: {
-          authorization,
+    const { data, status } =
+      await this.httpService.axiosRef.get<UrlMetaResponse>(
+        `${UrlMeta.API_URL}/?url=${encodedUrl}`,
+        {
+          headers: {
+            authorization,
+          },
         },
-      },
-    );
+      );
+
+    if (status !== HttpStatus.OK)
+      this.logger.error('Request errored with Url Meta API');
+
+    const { result, meta } = data;
+
+    if (result.status === UrlMeta.RESULT_ERROR) {
+      this.logger.error(`Failed to validate url. [Message: ${result.reason}]`);
+    } else {
+      this.logger.log(`Url validated.`);
+      return meta;
+    }
   }
 }
