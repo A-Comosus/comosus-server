@@ -1,19 +1,15 @@
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import * as _ from 'lodash';
-import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '@src/common';
-import { HttpService } from '@nestjs/axios';
+import { PrismaService, AxiosService } from '@src/common';
 
 import { CreateLinkInput, CreateLinkResponse, UpdateLinkInput } from './dto';
-import { UrlMeta } from './constants/UrlMeta';
-
+import { UrlMeta } from '@src/constants';
 @Injectable()
 export class LinkService {
   private readonly logger = new Logger(LinkService.name);
   constructor(
-    private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
-    private readonly httpService: HttpService,
+    private readonly axiosService: AxiosService,
   ) {}
 
   async create({ userId }: CreateLinkInput): Promise<CreateLinkResponse> {
@@ -97,16 +93,7 @@ export class LinkService {
 
   async validateUrl(url: string) {
     this.logger.log(`Validating url ${url} received..`);
-    const encodedUrl = encodeURIComponent(url);
-    const { data, status } = await this.httpService
-      .get<UrlMetaResponse>(`${UrlMeta.API_URL}/?url=${encodedUrl}`, {
-        headers: {
-          Authorization: Buffer.from(
-            this.configService.get(UrlMeta.URL_META_AUTH_STRING),
-          ).toString('base64'),
-        },
-      })
-      .toPromise();
+    const { data, status } = await this.axiosService.validateUrl(url);
 
     if (status !== HttpStatus.OK)
       this.logger.error('Request errored with Url Meta API');
