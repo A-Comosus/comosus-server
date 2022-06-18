@@ -29,7 +29,7 @@ export class AxiosService {
   validateUrl(url: string): Promise<AxiosResponse<UrlMetaResponse>> {
     const encodedUrl = encodeURIComponent(url);
     const encodedAuthString = Buffer.from(
-      this.configService.get(UrlMeta.URL_META_AUTH_STRING),
+      this.configService.get(EnvVar.UrlMetaAuthString),
     ).toString('base64');
     const authorization = `Basic ${encodedAuthString}`;
 
