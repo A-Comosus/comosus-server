@@ -1,15 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
 import { addHours } from 'date-fns';
 import 'crypto';
 
 import { CreateUserInput } from './dto/create-user.input';
 import { PrismaService } from '@src/common';
+import { EnvVar } from '@src/constants';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async create(_createUserInput: CreateUserInput) {
     this.logger.log(`Created user with username ${_createUserInput.username}.`);
@@ -56,7 +61,10 @@ export class UserService {
   async createPasswordResetLink(_id: string) {
     const { createHmac, randomBytes } = await import('crypto');
     const token = randomBytes(32).toString('hex');
-    const resetToken = createHmac('sha256', process.env.CRYPTO_SECRET)
+    const resetToken = createHmac(
+      'sha256',
+      this.configService.get(EnvVar.CryptoSecret),
+    )
       .update(token)
       .digest('hex');
     const resetTokenExpires = addHours(new Date(), 1).toISOString();
@@ -70,6 +78,8 @@ export class UserService {
       },
     });
     this.logger.log(`Create password reset token for user with id ${_id}.`);
-    return `${process.env.CLIENT_BASE_URL}/reset-password/${resetToken}`;
+    return `${this.configService.get(
+      EnvVar.ClientBaseUrl,
+    )}/reset-password/${resetToken}`;
   }
 }

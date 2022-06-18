@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '@src/common';
-import { HttpService } from '@nestjs/axios';
+
+import { PrismaService, AxiosService } from '@src/common';
 import { LinkService } from '../link.service';
 
 describe('LinkService', () => {
@@ -11,9 +10,8 @@ describe('LinkService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LinkService,
-        { provide: ConfigService, useValue: {} },
         { provide: PrismaService, useValue: {} },
-        { provide: HttpService, useValue: {} },
+        { provide: AxiosService, useValue: {} },
       ],
     }).compile();
 

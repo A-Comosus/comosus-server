@@ -2,7 +2,7 @@ type UrlMetaResponse = {
   result: {
     status: 'OK' | 'ERROR';
     reason?: string;
-    code?: numer;
+    code?: number;
   };
   meta?: {
     site: {
