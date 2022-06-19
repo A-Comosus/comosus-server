@@ -11,10 +11,10 @@ export class Link {
   @Field()
   isVisible: boolean;
 
-  @Field({ nullable: true })
+  @Field()
   title: string;
 
-  @Field({ nullable: true })
+  @Field()
   url: string;
 
   @Field({ nullable: true })
