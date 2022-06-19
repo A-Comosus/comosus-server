@@ -41,6 +41,7 @@ RUN apk update && apk add bash
 EXPOSE 3100
 
 ENV PORT 3100
+ENV NODE_ENV staging
 ENV URL_META_AUTH_STRING gmail
 ENV DATABASE_URL mongodb
 ENV CRYPTO_SECRET defualt
