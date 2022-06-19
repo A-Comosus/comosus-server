@@ -3,7 +3,12 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '@src/resource/auth/guards';
 import { Logger, UseGuards } from '@nestjs/common';
-import { FindByIdInput, FindByUsernameArgs, FindByEmailArgs } from './dto';
+import {
+  FindByIdInput,
+  FindByUsernameArgs,
+  FindByEmailArgs,
+  FindUserByUsernameResponse,
+} from './dto';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -26,8 +31,7 @@ export class UserResolver {
     return this.userService.findById(id);
   }
 
-  @Query(() => User, { name: 'findUserByUsername' })
-  @UseGuards(JwtAuthGuard)
+  @Query(() => FindUserByUsernameResponse, { name: 'findUserByUsername' })
   findByUsername(@Args('username') { username }: FindByUsernameArgs) {
     this.logger.log(
       `Receiving request to find user with username ${username}...`,
