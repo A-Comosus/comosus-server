@@ -1,0 +1,24 @@
+FROM node:14 AS builder
+WORKDIR /app
+COPY package*.json ./
+COPY tsconfig*.json ./
+COPY prisma ./prisma/
+
+RUN yarn install 
+COPY . .
+RUN yarn build
+FROM node:14
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/tsconfig*.json ./
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 3100
+
+# for primas 
+ENV DATABASE_URL mongodb+srv://mablepmyip:s6e29k88@cluster0.z1kkq.mongodb.net/a-comosus?retryWrites=true&w=majority
+
+ENV CRYPTO_SECRET a-comosus
+ENV SENDGRID_API_KEY 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
+ENV CLIENT_BASE_URL http://localhost:3000
+CMD ["yarn", "start"]
