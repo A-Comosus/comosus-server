@@ -3,7 +3,7 @@ export enum EnvVar {
   NodeEnv = 'NODE_ENV',
   CryptoSecret = 'CRYPTO_SECRET',
   ClientBaseUrl = 'CLIENT_BASE_URL',
-  SendGridApiKey = 'SEND_GRID_API_KEY',
+  SendGridApiKey = 'SENDGRID_API_KEY',
   UrlMetaAuthString = 'URL_META_AUTH_STRING',
 }
 
