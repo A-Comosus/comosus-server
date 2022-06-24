@@ -9,8 +9,8 @@ import {
 } from './dto';
 import * as bcrypt from 'bcrypt';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const compareAsc = require('date-fns/compareAsc');
-// import compareAsc from 'date-fns/compareAsc';
+// const compareAsc = require('date-fns/compareAsc');
+import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { MailingService } from '@common';
 
