@@ -18,12 +18,13 @@ export class UserService {
 
   async create(_createUserInput: CreateUserInput) {
     this.logger.log(`Created user with username ${_createUserInput.username}.`);
-    const newUserData = {
-      ..._createUserInput,
-      timeAcceptPolicy: new Date().toISOString(),
-    };
     return await this.prisma.user.create({
-      data: newUserData,
+      data: {
+        ..._createUserInput,
+        timeAcceptPolicy: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
     });
   }
 
@@ -55,31 +56,50 @@ export class UserService {
 
   async findByEmail(_email: string) {
     this.logger.log(`Found data of user with email ${_email}`);
-    return this.prisma.user.findFirst({ where: { email: _email } });
+    return await this.prisma.user.findFirst({ where: { email: _email } });
   }
 
-  async createPasswordResetLink(_id: string) {
+  async findByResetPasswordToken(_resetToken: string) {
+    return this.prisma.user.findFirst({
+      where: { passwordResetToken: _resetToken },
+    });
+  }
+
+  async createPasswordResetLink(id: string) {
     const { createHmac, randomBytes } = await import('crypto');
     const token = randomBytes(32).toString('hex');
-    const resetToken = createHmac(
+    const passwordResetToken = createHmac(
       'sha256',
       this.configService.get(EnvVar.CryptoSecret),
     )
       .update(token)
       .digest('hex');
-    const resetTokenExpires = addHours(new Date(), 1).toISOString();
-    await this.prisma.user.update({
-      where: {
-        id: _id,
-      },
+    const passwordResetTokenExpires = addHours(new Date(), 1).toISOString();
+    await this.updateUserById(id, {
+      passwordResetToken,
+      passwordResetTokenExpires,
+    });
+    this.logger.log(`Create password reset token for user with id ${id}.`);
+    return `${process.env.CLIENT_BASE_URL}/reset-password/${passwordResetToken}`;
+  }
+
+  async resetPassword(id: string, password: string) {
+    this.logger.log(`Password reset successfully`);
+    await this.updateUserById(id, {
+      password,
+      passwordResetToken: null,
+      passwordResetTokenExpires: null,
+    });
+    return true;
+  }
+
+  async updateUserById(id: string, updateUserData: UpdateUserDataType) {
+    return await this.prisma.user.update({
+      where: { id },
       data: {
-        passwordResetToken: resetToken,
-        passwordResetTokenExpires: resetTokenExpires,
+        ...updateUserData,
+        updatedAt: new Date().toISOString(),
       },
     });
-    this.logger.log(`Create password reset token for user with id ${_id}.`);
-    return `${this.configService.get(
-      EnvVar.ClientBaseUrl,
-    )}/reset-password/${resetToken}`;
   }
 }

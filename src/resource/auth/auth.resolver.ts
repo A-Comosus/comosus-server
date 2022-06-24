@@ -9,6 +9,7 @@ import {
   LoginResponse,
   RegisterDetailInput,
   ForgetPasswordInput,
+  ResetPasswordInput,
 } from './dto';
 
 @Resolver()
@@ -41,5 +42,11 @@ export class AuthResolver {
       `Receiving request to send password reset email to ${_forgetPasswordInput.email}`,
     );
     return this.authService.forgetPasswordSendEmail(_forgetPasswordInput);
+  }
+
+  @Mutation(() => Boolean)
+  resetPassword(@Args('detail') resetPasswordInput: ResetPasswordInput) {
+    this.logger.log(`Receiving request to reset password`);
+    return this.authService.resetPassword(resetPasswordInput);
   }
 }
