@@ -51,10 +51,5 @@ describe('AuthService should be...', () => {
     });
   });
 
-  it('able to register', async () => {
-    const { email, username, password, acceptPolicy } = mockUsers[1];
-    expect(
-      service.register({ email, username, password, acceptPolicy }),
-    ).resolves.toEqual(undefined);
-  });
+  it.todo('able to register');
 });
