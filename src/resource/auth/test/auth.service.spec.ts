@@ -4,13 +4,24 @@ import { JwtService } from '@nestjs/jwt';
 import { MailingService } from '@common';
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
+import { mockUsers } from './mockAuthData';
 
 describe('AuthService should be...', () => {
   let service: AuthService;
 
   const mockUserService = {
-    create: jest.fn(),
-    findByUsername: jest.fn(),
+    create: jest.fn((createUserInput) => {
+      return {
+        ...createUserInput,
+        id: Math.random().toString(36),
+        timeAcceptPolicy: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    }),
+    findByUsername: jest.fn((username) => {
+      return mockUsers.find((user) => user.username === username);
+    }),
     login: jest.fn(),
     findByEmail: jest.fn(),
     register: jest.fn(),
@@ -45,5 +56,15 @@ describe('AuthService should be...', () => {
 
   it.todo('able to login');
 
-  it.todo('able to register');
+  it('able to register', async () => {
+    const registerInput = {
+      email: 'email@example.com',
+      username: 'username',
+      password: 'secret',
+      acceptPolicy: true,
+    };
+    expect(await service.register(registerInput)).toMatchObject({
+      id: expect.any(String),
+    });
+  });
 });
