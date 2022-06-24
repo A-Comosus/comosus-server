@@ -1,4 +1,4 @@
-const mockUsers = [
+export const mockUsers = [
   {
     id: '0',
     email: 'test-0@example.com',
@@ -27,5 +27,3 @@ const mockUsers = [
     passwordResetTokenExpires: '2021-06-04T11:41:07.790Z',
   },
 ];
-
-export default mockUsers;
