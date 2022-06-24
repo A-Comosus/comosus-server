@@ -2,9 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as dotenv from 'dotenv';
+
+import { PrismaService, MailingService, CustomLoggerService } from '@common';
 import { AppModule } from './resource/app/app.module';
 import { setupSwagger } from './config';
-import { PrismaService, MailingService, CustomLoggerService } from '@common';
+import { EnvVar } from './constants';
 
 dotenv.config();
 
@@ -24,7 +26,7 @@ async function bootstrap() {
   const mailingService = app.get(MailingService);
   mailingService.initMailingService();
 
-  const port = parseInt(config.get('PORT'), 10) ?? 3100;
+  const port = parseInt(config.get(EnvVar.Port), 10) ?? 3100;
   await app.listen(port);
   logger.log(`Server listening on port ${port}`);
 }

@@ -21,4 +21,18 @@ model User {
   passwordResetTokenExpires String?
   createdAt String
   updatedAt String
+  links Link[]
+}
+
+model Link {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  isDraft Boolean @default(true)
+  isVisible Boolean @default(true)
+  title String?
+  url String?
+  logoUrl String?
+  user User @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+  createdAt String
+  updatedAt String
 }

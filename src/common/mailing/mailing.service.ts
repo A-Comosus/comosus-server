@@ -1,19 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+
+import { EnvVar } from '@src/constants';
 
 @Injectable()
 export class MailingService {
   private readonly logger = new Logger(MailingService.name);
   private transporter: nodemailer.Transporter;
 
+  constructor(private readonly configService: ConfigService) {}
+
   initMailingService = async () => {
+    const apiKey = this.configService.get(EnvVar.SendGridApiKey) ?? 'null';
+
     this.transporter = nodemailer.createTransport({
       host: 'smtp.sendgrid.net',
       port: 465,
       secure: true,
       auth: {
         user: 'apikey',
-        pass: process.env.SENDGRID_API_KEY ?? 'null',
+        pass: apiKey,
       },
     });
     this.logger.log('Mail transporter created.');

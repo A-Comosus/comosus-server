@@ -21,13 +21,15 @@
 
 TL;DR You need to set up following environment variables.
 
-| name             | description                                                                                                                      |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| PORT             | The port for this server to listen to                                                                                            |
-| DATABASE_URL     | The connection string to your database                                                                                           |
-| CRYPTO_SECRET    | It's a secret 🤫                                                                                                                 |
-| SENDGRID_API_KEY | You probably need to ask your project manager for this, else create one on SendGrid and update the mailing service configuration |
-| CLIENT_BASE_URL  | The url to our front-end application                                                                                             |
+| name                   | description                                                                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| PORT                   | The port for this server to listen to                                                                                            |
+| NODE_ENV               | Environment this app will run within `development` \| `staging` \| `production`                                                  |
+| CLIENT_BASE_URL        | The url to our front-end application                                                                                             |
+| \*DATABASE_URL         | The connection string to your database                                                                                           |
+| \*CRYPTO_SECRET        | It's a secret 🤫                                                                                                                 |
+| \*SEND_GRID_API_KEY    | You probably need to ask your project manager for this, else create one on SendGrid and update the mailing service configuration |
+| \*URL_META_AUTH_STRING | You need this env var to run a 3rd-party api to validate url and extract meta data for us                                        |
 
 At this stage, our `docker-compose.yml` is not ready yet, so please either find the database `DATABASE_URL` either by [setting it up yourself](https://www.mongodb.com/docs/atlas/getting-started/) or ask your project admin.
 

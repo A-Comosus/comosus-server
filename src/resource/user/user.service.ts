@@ -1,14 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
+import { ConfigService } from '@nestjs/config';
+import { isNil } from 'lodash';
+import { addHours } from 'date-fns';
 import 'crypto';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const addHours = require('date-fns/addHours');
+
+import { CreateUserInput } from './dto/create-user.input';
 import { PrismaService } from '@src/common';
+import { EnvVar } from '@src/constants';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async create(_createUserInput: CreateUserInput) {
     this.logger.log(`Created user with username ${_createUserInput.username}.`);
@@ -27,9 +33,25 @@ export class UserService {
     return await this.prisma.user.findMany();
   }
 
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (isNil(user)) {
+      this.logger.error(`Cannot found user with id ${id}`);
+    } else {
+      this.logger.log(`Found data of user with id ${id}`);
+      return user;
+    }
+  }
+
   async findByUsername(_username: string) {
     this.logger.log(`Found data of user with username ${_username}`);
-    return this.prisma.user.findFirst({ where: { username: _username } });
+    return this.prisma.user.findFirst({
+      where: { username: _username },
+      include: { links: { where: { isDraft: false, isVisible: true } } },
+    });
   }
 
   async findByEmail(_email: string) {
@@ -46,7 +68,10 @@ export class UserService {
   async createPasswordResetLink(id: string) {
     const { createHmac, randomBytes } = await import('crypto');
     const token = randomBytes(32).toString('hex');
-    const passwordResetToken = createHmac('sha256', process.env.CRYPTO_SECRET)
+    const passwordResetToken = createHmac(
+      'sha256',
+      this.configService.get(EnvVar.CryptoSecret),
+    )
       .update(token)
       .digest('hex');
     const passwordResetTokenExpires = addHours(new Date(), 1).toISOString();

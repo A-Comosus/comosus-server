@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
+
 import { PrismaService } from '@common';
 import { UserService } from '../user.service';
 import mockUserData from './mockUserData';
-import * as crypto from 'crypto';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -34,7 +36,8 @@ describe('UserService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService, PrismaService],
+      imports: [ConfigModule],
+      providers: [UserService, PrismaService, ConfigService],
     })
       .overrideProvider(PrismaService)
       .useValue(mockPrismaClient)

@@ -1,8 +1,9 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+
 import { Link } from '@src/resource/link';
 
 @ObjectType()
-export class User {
+export class FindUserByUsernameResponse {
   @Field()
   id: string;
 
