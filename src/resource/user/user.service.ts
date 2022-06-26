@@ -80,7 +80,9 @@ export class UserService {
       passwordResetTokenExpires,
     });
     this.logger.log(`Create password reset token for user with id ${id}.`);
-    return `${process.env.CLIENT_BASE_URL}/reset-password/${passwordResetToken}`;
+    return `${this.configService.get(
+      EnvVar.ClientBaseUrl,
+    )}/reset-password/${passwordResetToken}`;
   }
 
   async resetPassword(id: string, password: string) {
