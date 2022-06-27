@@ -58,10 +58,12 @@ pipeline {
 		  }
 		}
 
-        		stage('Deploy to EKS'){
-            steps {
-                 sh 'kubectl apply -f deployment.yml'
-            }
+        stage('Deploy to EKS'){
+  			kubernetesDeploy(
+				configs: './deployment.yaml',
+				kubeconfigId: 'k8s',
+				enableConfigSubstitution: true
+				)           
         }
 		
 		// stage('Deploy to ecs') {
