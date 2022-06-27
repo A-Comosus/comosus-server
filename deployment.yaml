@@ -23,3 +23,17 @@ spec:
             - containerPort: 3100
               protocol: TCP
           imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comosus-server
+spec:
+  selector:
+    app: comosus-server
+  ports:
+    - protocol: TCP
+      port: 3100
+      targetPort: 3100
+  type: LoadBalancer
