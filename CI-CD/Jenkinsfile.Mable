@@ -61,7 +61,7 @@ pipeline {
         stage('Deploy to EKS'){
 			steps{
   			kubernetesDeploy(
-				configs: './deployment.yaml',
+				configs: 'deployment.yaml',
 				kubeconfigId: 'k8s',
 				enableConfigSubstitution: true
 				)           
