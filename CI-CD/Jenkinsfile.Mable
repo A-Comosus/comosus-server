@@ -41,7 +41,7 @@ pipeline {
 		stage('Build App Image') {
 		   steps {
             script {
-				dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
+				dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Alex .")
 			}
 		 }
 		}
@@ -56,14 +56,20 @@ pipeline {
 			}
 		  }
 		}
+
+        		stage('Deploy to EKS'){
+            steps {
+                 sh 'kubectl apply -f deployment.yml'
+            }
+        }
 		
-		stage('Deploy to ecs') {
-          steps {
-            withAWS(credentials: 'awscreds', region: 'us-east-1') {
-                sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
-            }
-            }
+		// stage('Deploy to ecs') {
+        //   steps {
+        //     withAWS(credentials: 'awscreds', region: 'us-east-1') {
+        //         sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+        //     }
+        //     }
     
-		}
+		// }
      }
 }
