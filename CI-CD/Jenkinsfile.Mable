@@ -17,6 +17,7 @@ pipeline {
 		  steps {
 			    echo 'Cleanup docker space'
                 sh 'docker system prune -f'
+                sh 'docker image rm $(docker images -q)'
 		  }
 		}
 		
