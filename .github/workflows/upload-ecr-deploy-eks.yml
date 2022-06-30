@@ -1,0 +1,54 @@
+name: Build and push image to ECR
+
+on:
+  push:
+    branches:
+    - 'develop'
+    - 'ci-cd/*Alex'
+
+jobs:
+  build:
+    environment: uat-deployment
+    
+    name: Build Image
+    runs-on: ubuntu-latest
+    steps:
+     - name: Check out code
+       uses: actions/checkout@v3
+    
+     - name: Configure AWS credentials
+       uses: aws-actions/configure-aws-credentials@v1
+       with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2
+
+     - name: Login to Amazon ECR
+       id: login-ecr
+       uses: aws-actions/amazon-ecr-login@v1
+
+     - name: Build, tag, and push image to Amazon ECR
+       env:
+         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+         ECR_REPOSITORY: a-comosus-uat-backend
+       run: |
+         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER -f Dockerfile.Alex .
+         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_RUN_NUMBER
+
+     - name: Check out code  
+       uses: actions/checkout@v3
+       with:
+         repository: A-Comosus/comosus-uat-tf
+         ref: main
+         token: ${{ secrets.PAT }}
+
+     - name: HashiCorp - Setup Terraform
+       uses: hashicorp/setup-terraform@v2.0.0
+    
+     - name: Terraform init && apply
+       working-directory: ./kubernetes-backend
+       run: terraform init
+
+     - name: Terraform apply
+       working-directory: ./kubernetes-frontend
+       run: terraform apply -var='backend-image-tage=${GITHUB_RUN_NUMBER}'  -auto-approve
