@@ -14,9 +14,6 @@ pipeline {
         timestamps()
     }
 
-    tools {
-        dockerTool 'docker-latest'
-    }
 
     environment {
         IMAGE_VERSION    = "${env.BUILD_ID}"
