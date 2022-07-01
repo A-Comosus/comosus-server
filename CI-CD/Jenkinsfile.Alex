@@ -19,10 +19,10 @@ pipeline {
     }
 
     environment {
-        IMAGE_VERSION = "${env.BUILD_ID}"
-        AWS_ECR_REGION = 'ap-southeast-2'
-        DATABASE_URL = credentials('DATABASE_URL')
-        CRYPTO_SECRET = credentials('CRYPTO_SECRET')
+        IMAGE_VERSION    = "${env.BUILD_ID}"
+        AWS_ECR_REGION   = 'ap-southeast-2'
+        DATABASE_URL     = credentials('DATABASE_URL')
+        CRYPTO_SECRET    = credentials('CRYPTO_SECRET')
         SENDGRID_API_KEY = credentials('SENDGRID_API_KEY')
     }
 
@@ -67,28 +67,14 @@ pipeline {
             }
         }
 
-        // stage ('Integrated Test') {
-        //     steps {
-        //         echo 'Integrated Test....'
-        //         sh
-        //     }
-        // }
 
         stage('Build') {
             steps {
                 echo 'Building....'
-                // sh 'yarn prisma generate'
                 sh 'yarn prisma db push'
                 sh 'yarn build'
             }
         }
-
-        // stage ('Container Integrated Test') {
-        //     steps {
-        //         echo 'Container Integrated Test....'
-        //         sh
-        //     }
-        // }
 
         stage('Build and Upload Image to ECR') {
             
@@ -158,10 +144,7 @@ pipeline {
 
     post {
         always {
-            withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
-                deleteDir()
-                // sh "docker rmi ${AWS_ECR_URL}:${IMAGE_VERSION}"
-            }
+            deleteDir()
         }
     }
 }
