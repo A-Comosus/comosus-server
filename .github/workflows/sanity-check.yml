@@ -22,7 +22,6 @@ jobs:
 
       - name: Checking pull request for test
         run: yarn test:cov
-      - run: yarn run e2e:cov
       - run: echo "🧪 Testing completes!"
       - run: echo "📝 Workflow will now run a linter check."
 
