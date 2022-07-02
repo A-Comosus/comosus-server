@@ -9,14 +9,13 @@ pipeline {
 	
 	tools { nodejs "node" }
 	
-	stages {	
-	    
+	stages {		    
 	    stage('Clear space'){
 		  steps {
-			    echo 'Cleanup docker space'
-                sh 'docker system prune -f'
+				echo 'Cleanup docker space'
+            	sh 'docker system prune -f'
 				sh 'docker rm -f $(docker ps -aq)'
-                sh 'docker rmi -f $(docker images -aq)'
+            	sh 'docker rmi -f $(docker images -aq)'
 		  }
 		}
 		
@@ -40,10 +39,10 @@ pipeline {
 		
 		stage('Build App Image') {
 		   steps {
-            script {
-				dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
+        		script {
+					dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
+				}
 			}
-		 }
 		}
 		
 		stage('Upload App Image') {
@@ -57,12 +56,12 @@ pipeline {
 		  }
 		}
 
-        stage('Deploy to EKS'){
+		stage('Deploy to EKS'){
 			steps{
-  			kubernetesDeploy(
-				configs: 'deployment.yaml',
-				kubeconfigId: 'k8s',
-				enableConfigSubstitution: true
+  				kubernetesDeploy(
+					configs: 'deployment.yaml',
+					kubeconfigId: 'k8s',
+					enableConfigSubstitution: true
 				)           
 			}
         }
