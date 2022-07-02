@@ -10,7 +10,7 @@ pipeline {
 	tools { nodejs "node" }
 	
 	stages {		    
-	    stage('Clear space'){
+	        stage('Clear space'){
 		  steps {
 				echo 'Cleanup docker space'
             	sh 'docker system prune -f'
@@ -25,7 +25,7 @@ pipeline {
 		
 		stage('Install and Build'){
 		  steps {
-		    sh 'yarn install && yarn prisma generate && yarn build'
+		    	sh 'yarn install && yarn prisma generate && yarn build'
 		  }
 		}
 
@@ -36,32 +36,32 @@ pipeline {
 		}
 		
 		stage('Build App Image') {
-		   steps {
+		  steps {
         		script {
-					dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
-				}
+				dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
 			}
+		  }
 		}
 		
 		stage('Upload App Image') {
 		  steps{
 			script {
-			  docker.withRegistry(comosusClientRegistry, registryCredential ) {
-				dockerImage.push("$BUILD_NUMBER")
-				dockerImage.push('latest')
-			  }
+			  	docker.withRegistry(comosusClientRegistry, registryCredential ) {
+					dockerImage.push("$BUILD_NUMBER")
+					dockerImage.push('latest')
+			  	}
 			}
 		  }
 		}
 
 		stage('Deploy to EKS'){
-			steps{
-  				kubernetesDeploy(
-					configs: 'deployment.yaml',
-					kubeconfigId: 'k8s',
-					enableConfigSubstitution: true
-				)           
-			}
+		  steps{
+  			kubernetesDeploy(
+				configs: 'deployment.yaml',
+				kubeconfigId: 'k8s',
+				enableConfigSubstitution: true
+			)           
+		  }
         }
      }
 }
