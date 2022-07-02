@@ -5,8 +5,6 @@ pipeline {
 		registryCredential = 'ecr:us-east-1:awscreds'
 		appRegistry = "947036392937.dkr.ecr.us-east-1.amazonaws.com/comosus-server-img"
 		comosusClientRegistry = "https://947036392937.dkr.ecr.us-east-1.amazonaws.com/"
-		cluster = "ComosusServer"
-        service = "ComosusServerAppSVC"
 	}
 	
 	tools { nodejs "node" }
@@ -17,7 +15,8 @@ pipeline {
 		  steps {
 			    echo 'Cleanup docker space'
                 sh 'docker system prune -f'
-                sh 'docker image rm -f $(docker images -q)'
+				sh 'docker rm -f $(docker ps -aq)'
+                sh 'docker rmi -f $(docker images -aq)'
 		  }
 		}
 		
@@ -42,7 +41,7 @@ pipeline {
 		stage('Build App Image') {
 		   steps {
             script {
-				dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Alex .")
+				dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
 			}
 		 }
 		}
@@ -67,14 +66,5 @@ pipeline {
 				)           
 			}
         }
-		
-		// stage('Deploy to ecs') {
-        //   steps {
-        //     withAWS(credentials: 'awscreds', region: 'us-east-1') {
-        //         sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
-        //     }
-        //     }
-    
-		// }
      }
 }
