@@ -6,7 +6,7 @@ import 'crypto';
 
 import { CreateUserInput } from './dto/create-user.input';
 import { PrismaService } from '@src/common';
-import { EnvVar } from '@src/constants';
+import { EnvVar, UserStatus } from '@src/constants';
 
 @Injectable()
 export class UserService {
@@ -21,6 +21,7 @@ export class UserService {
     return await this.prisma.user.create({
       data: {
         ..._createUserInput,
+        status: UserStatus.Registered,
         timeAcceptPolicy: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
