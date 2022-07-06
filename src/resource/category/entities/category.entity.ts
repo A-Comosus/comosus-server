@@ -8,6 +8,15 @@ export class Category {
   @Field()
   type: string;
 
-  @Field(() => [String], { nullable: true })
-  users: [string];
+  @Field(() => [CategoryUser], { nullable: true })
+  users: [CategoryUser];
+}
+
+@ObjectType()
+class CategoryUser {
+  @Field()
+  id: string;
+
+  @Field()
+  username: string;
 }

@@ -1,2 +1,1 @@
-export { CreateCategoryInput } from './inputs/create-category.input';
-export { UpdateCategoryInput } from './inputs/update-category.input';
+export { CreateCategoryInput } from './create-category.input';
