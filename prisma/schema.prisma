@@ -16,13 +16,23 @@ model User {
   email  String  @unique
   password  String
   status String
-  acceptPolicy Boolean 
+  categoryId String @default("undefined")
+  category Category @relation(fields: [categoryId], references: [id])
+  acceptPolicy Boolean
   timeAcceptPolicy String
   passwordResetToken String?
   passwordResetTokenExpires String?
   createdAt String
   updatedAt String
   links Link[]
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  type String @unique
+  users User[]
+  createdAt String
+  updatedAt String
 }
 
 model Link {

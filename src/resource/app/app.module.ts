@@ -5,7 +5,7 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
 
 import { MailingService, PrismaService, CustomLoggerService } from '@common';
-import { UserModule, AuthModule, LinkModule } from '@resource';
+import { UserModule, AuthModule, LinkModule, CategoryModule } from '@resource';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 
@@ -24,6 +24,7 @@ import { AppService } from './app.service';
     UserModule,
     AuthModule,
     LinkModule,
+    CategoryModule,
   ],
   providers: [
     AppResolver,
