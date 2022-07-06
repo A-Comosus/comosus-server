@@ -13,11 +13,12 @@ datasource db {
 model User {
   id    String  @id @default(auto()) @map("_id") @db.ObjectId
   username  String  @unique
+  displayName String?
   email  String  @unique
   password  String
   status String
-  categoryId String @default("undefined")
-  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  category Category? @relation(fields: [categoryId], references: [id])
   acceptPolicy Boolean
   timeAcceptPolicy String
   passwordResetToken String?

@@ -7,10 +7,19 @@ export class User {
   id: string;
 
   @Field()
+  status: string;
+
+  @Field()
   email: string;
 
   @Field()
   username: string;
+
+  @Field({ nullable: true })
+  displayName: string;
+
+  @Field({ nullable: true })
+  categoryId: string;
 
   @Field(() => [Link])
   links: [Link];
