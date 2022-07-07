@@ -20,7 +20,4 @@ export class User {
 
   @Field({ nullable: true })
   categoryId: string;
-
-  @Field(() => [Link])
-  links: [Link];
 }
