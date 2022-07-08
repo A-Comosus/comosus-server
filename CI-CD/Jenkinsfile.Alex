@@ -14,15 +14,12 @@ pipeline {
         timestamps()
     }
 
-    tools {
-        dockerTool 'docker-latest'
-    }
 
     environment {
-        IMAGE_VERSION = "${env.BUILD_ID}"
-        AWS_ECR_REGION = 'ap-southeast-2'
-        DATABASE_URL = credentials('DATABASE_URL')
-        CRYPTO_SECRET = credentials('CRYPTO_SECRET')
+        IMAGE_VERSION    = "${env.BUILD_ID}"
+        AWS_ECR_REGION   = 'ap-southeast-2'
+        DATABASE_URL     = credentials('DATABASE_URL')
+        CRYPTO_SECRET    = credentials('CRYPTO_SECRET')
         SENDGRID_API_KEY = credentials('SENDGRID_API_KEY')
     }
 
@@ -67,35 +64,21 @@ pipeline {
             }
         }
 
-        // stage ('Integrated Test') {
-        //     steps {
-        //         echo 'Integrated Test....'
-        //         sh
-        //     }
-        // }
 
         stage('Build') {
             steps {
                 echo 'Building....'
-                // sh 'yarn prisma generate'
                 sh 'yarn prisma db push'
                 sh 'yarn build'
             }
         }
-
-        // stage ('Container Integrated Test') {
-        //     steps {
-        //         echo 'Container Integrated Test....'
-        //         sh
-        //     }
-        // }
 
         stage('Build and Upload Image to ECR') {
             
             when {
                 anyOf {
                     branch 'develop'
-                    branch 'CI-CD/*'
+                    branch 'ci-cd/*'
                 }
             }
 
@@ -130,14 +113,14 @@ pipeline {
             steps {
                 echo 'Git check out terrafom repo...'
                 // Get source code from a GitHub repository
-                git branch: 'master',credentialsId:'Terraform-repo-access' ,url:'git@github.com:A-Comosus/a-comosus-terraform.git'
+                git branch: 'master',credentialsId:'Terraform-repo-access' ,url:'git@github.com:A-Comosus/comosus-uat-tf.git'
             
 
                 echo 'Update EKS through terraform....'
 
                 echo 'inital terraform'
                 withAWS(region: "${AWS_ECR_REGION}", credentials:'eks-jenkins-update-account') {
-                    dir("kubernetes-config") {
+                    dir("kubernetes-backend") {
                         sh 'terraform init'
                     }
                 }
@@ -145,9 +128,9 @@ pipeline {
                 echo 'terraform apply'
                 withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
                     withAWS(region: "${AWS_ECR_REGION}", credentials:'eks-jenkins-update-account') {
-                        dir("kubernetes-config") {
+                        dir("kubernetes-backend") {
                            script { 
-                              sh("terraform apply -var=\'backend-image=${AWS_ECR_URL}:${IMAGE_VERSION}\' --auto-approve") 
+                              sh("terraform apply -var=\'backend-image-tage=${IMAGE_VERSION}\' --auto-approve") 
                            }
                         }
                     }
@@ -158,10 +141,7 @@ pipeline {
 
     post {
         always {
-            withCredentials([string(credentialsId: 'AWS_REPOSITORY_URL_SECRET_BACKEND', variable: 'AWS_ECR_URL')]) {
-                deleteDir()
-                // sh "docker rmi ${AWS_ECR_URL}:${IMAGE_VERSION}"
-            }
+            deleteDir()
         }
     }
 }
