@@ -5,6 +5,7 @@ import * as crypto from 'crypto';
 import { PrismaService } from '@common';
 import { UserService } from '../user.service';
 import mockUserData from './mockUserData';
+import { UserStatus } from '@src/constants';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -54,6 +55,7 @@ describe('UserService', () => {
     const newUser = mockUserData[0];
     expect(await userService.create(newUser)).toEqual({
       id: expect.any(Number),
+      status: UserStatus.Registered,
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
       timeAcceptPolicy: expect.any(String),

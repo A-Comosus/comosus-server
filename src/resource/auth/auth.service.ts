@@ -73,7 +73,20 @@ export class AuthService {
 
     const password = await bcrypt.hash(_registerDetail.password, 10);
 
-    return this.userService.create({ email, username, password, acceptPolicy });
+    const { id, username: _username } = await this.userService.create({
+      email,
+      username,
+      password,
+      acceptPolicy,
+    });
+
+    return {
+      id,
+      accessToken: this.jwtService.sign({
+        username: _username,
+        sub: id,
+      }),
+    };
   }
 
   async forgetPasswordSendEmail({ email }: ForgetPasswordInput) {

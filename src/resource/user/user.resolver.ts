@@ -1,13 +1,14 @@
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '@src/resource/auth/guards';
 import { Logger, UseGuards } from '@nestjs/common';
 import {
   FindByIdInput,
-  FindByUsernameArgs,
-  FindByEmailArgs,
+  FindUserByUsernameInput,
+  FindUserByEmailInput,
   FindUserByUsernameResponse,
+  OnboardUserInput,
 } from './dto';
 
 @Resolver(() => User)
@@ -31,8 +32,15 @@ export class UserResolver {
     return this.userService.findById(id);
   }
 
+  @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
+  onboardUser(@Args('data') data: OnboardUserInput) {
+    this.logger.log(`Receiving request to onboard user of id ${data.id}...`);
+    return this.userService.onboardUser(data);
+  }
+
   @Query(() => FindUserByUsernameResponse, { name: 'findUserByUsername' })
-  findByUsername(@Args('username') { username }: FindByUsernameArgs) {
+  findByUsername(@Args('username') { username }: FindUserByUsernameInput) {
     this.logger.log(
       `Receiving request to find user with username ${username}...`,
     );
@@ -41,7 +49,7 @@ export class UserResolver {
 
   @Query(() => User, { name: 'userByEmail' })
   @UseGuards(JwtAuthGuard)
-  findByEmail(@Args('email') { email }: FindByEmailArgs) {
+  findByEmail(@Args('email') { email }: FindUserByEmailInput) {
     this.logger.log(`Receiving request to find user with email ${email}...`);
     return this.userService.findByEmail(email);
   }

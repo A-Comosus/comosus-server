@@ -1,6 +1,9 @@
 // Input
-export { FindByIdInput } from './find-by-id.input';
-export { FindByUsernameArgs } from './find-by-username.args';
-export { FindUserByUsernameResponse } from './find-user-by-username.response';
-export { FindByEmailArgs } from './find-by-email.args';
+export { CreateUserInput } from './inputs/create-user.input';
+export { FindByIdInput } from './inputs/find-by-id.input';
+export { OnboardUserInput } from './inputs/onboard-user.input';
+export { FindUserByEmailInput } from './inputs/find-user-by-email.input';
+export { FindUserByUsernameInput } from './inputs/find-user-by-username.input';
+
+export { FindUserByUsernameResponse } from './responses/find-user-by-username.response';
 export { FindByResetPasswordTokenArgs } from './find-by-resetPasswordToken.args';

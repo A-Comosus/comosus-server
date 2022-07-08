@@ -4,9 +4,9 @@ import { isNil } from 'lodash';
 import { addHours } from 'date-fns';
 import 'crypto';
 
-import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserInput, OnboardUserInput } from './dto';
 import { PrismaService } from '@src/common';
-import { EnvVar } from '@src/constants';
+import { EnvVar, UserStatus } from '@src/constants';
 
 @Injectable()
 export class UserService {
@@ -21,8 +21,32 @@ export class UserService {
     return await this.prisma.user.create({
       data: {
         ..._createUserInput,
+        status: UserStatus.Registered,
         timeAcceptPolicy: new Date().toISOString(),
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    });
+  }
+
+  async onboardUser({ id, displayName, categoryId }: OnboardUserInput) {
+    this.logger.log(`Onboarded user of id ${id}.`);
+
+    if (
+      isNil(
+        await this.prisma.category.findUnique({
+          where: { id: categoryId },
+        }),
+      )
+    )
+      this.logger.error(`Cannot found category of id ${categoryId}.`);
+
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        displayName,
+        categoryId,
+        status: UserStatus.Onboarded,
         updatedAt: new Date().toISOString(),
       },
     });
