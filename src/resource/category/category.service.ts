@@ -26,7 +26,7 @@ export class CategoryService {
   }
 
   async findOne(id: string) {
-    this.logger.log(`Returning category of ${id}`);
+    this.logger.log(`Returned category of ${id}`);
     return await this.prismaService.category.findUnique({
       where: { id },
       include: { users: true },
