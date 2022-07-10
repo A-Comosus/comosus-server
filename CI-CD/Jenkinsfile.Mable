@@ -56,11 +56,11 @@ pipeline {
                 }
             }
             
-    	    steps{
+    	    steps {
         		script {
         		    docker.withRegistry(comosusClientRegistry, registryCredential) {
-        			dockerImage.push("$BUILD_NUMBER")
-        			dockerImage.push('latest')
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
         		    }
         		}
     	    }
