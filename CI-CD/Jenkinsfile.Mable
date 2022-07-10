@@ -48,7 +48,7 @@ pipeline {
             }
         }
 
-        stage('Upload App Image') {
+        stage('Upload Image to ECR') {
             when {
                 anyOf {
                     branch 'develop'
