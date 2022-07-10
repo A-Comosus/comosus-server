@@ -49,12 +49,12 @@ pipeline {
         }
 
         stage('Upload App Image') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'CI-CD'
-                }
-            }
+            // when {
+            //     anyOf {
+            //         branch 'develop'
+            //         branch 'CI-CD'
+            //     }
+            // }
             
     	    steps {
                 script {
@@ -67,12 +67,12 @@ pipeline {
 	    }
 	    
 	    stage('Deploy to ECS') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'CI-CD'
-                }
-            }
+            // when {
+            //     anyOf {
+            //         branch 'develop'
+            //         branch 'CI-CD'
+            //     }
+            // }
             
             steps {
                 withAWS(credentials: 'AWS_CREDS_SERVER_DEMO', region: 'ap-southeast-2') {
