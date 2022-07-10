@@ -1,24 +1,31 @@
-FROM node:14 AS builder
+FROM node:alpine AS deps
 WORKDIR /app
-COPY package*.json ./
-COPY tsconfig*.json ./
-COPY prisma ./prisma/
+COPY package*.json tsconfig*.json yarn.lock ./
+RUN yarn install  
 
-RUN yarn install 
+# Rebuild the source code only when needed
+FROM node:alpine AS builder
+WORKDIR /app
 COPY . .
-RUN yarn build
-FROM node:14
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/tsconfig*.json ./
+COPY --from=deps /app/node_modules ./node_modules
+RUN yarn prisma generate && yarn build
+
+# Production image, copy all the files and run next
+FROM node:alpine AS runner
+WORKDIR /app
+ENV NODE_ENV production
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/tsconfig.build.json ./tsconfig.build.json
+
+ENV PORT 3100
+ENV NODE_ENV staging
+ENV URL_META_AUTH_STRING gmail
+ENV DATABASE_URL mongodb
+ENV CRYPTO_SECRET defualt
+ENV SENDGRID_API_KEY SG
+ENV CLIENT_BASE_URL https://a-comosus.com
 
 EXPOSE 3100
-
-# for primas 
-ENV DATABASE_URL mongodb+srv://mablepmyip:s6e29k88@cluster0.z1kkq.mongodb.net/a-comosus?retryWrites=true&w=majority
-
-ENV CRYPTO_SECRET a-comosus
-ENV SENDGRID_API_KEY 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
-ENV CLIENT_BASE_URL http://localhost:3000
-CMD ["yarn", "start"]
+CMD ["node", "dist/main"]
