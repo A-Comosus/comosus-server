@@ -28,33 +28,33 @@ pipeline {
             }
         }
 
-        stage('Install and Build') {
-            steps {
-                sh 'yarn install && yarn prisma generate && yarn build'
-            }
-        }
+        // stage('Install and Build') {
+        //     steps {
+        //         sh 'yarn install && yarn prisma generate && yarn build'
+        //     }
+        // }
 
-        stage('Test') {
-            steps {
-                sh 'yarn test:cov'
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         sh 'yarn test:cov'
+        //     }
+        // }
 
-        stage('Build App Image') {
-            steps {
-                script {
-                    dockerImage = docker.build(appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
-                }
-            }
-        }
+        // stage('Build App Image') {
+        //     steps {
+        //         script {
+        //             dockerImage = docker.build(appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
+        //         }
+        //     }
+        // }
 
         stage('Upload App Image') {
-            // when {
-            //     anyOf {
-            //         branch 'develop'
-            //         branch 'CI-CD'
-            //     }
-            // }
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'ci-cd/*'
+                }
+            }
             
     	    steps {
                 script {
@@ -67,12 +67,12 @@ pipeline {
 	    }
 	    
 	    stage('Deploy to ECS') {
-            // when {
-            //     anyOf {
-            //         branch 'develop'
-            //         branch 'CI-CD'
-            //     }
-            // }
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'ci-cd/*'
+                }
+            }
             
             steps {
                 withAWS(credentials: 'AWS_CREDS_SERVER_DEMO', region: 'ap-southeast-2') {
