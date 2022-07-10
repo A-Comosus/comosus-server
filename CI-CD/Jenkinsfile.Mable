@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'node'
+        nodejs 'node18.4.0'
     }
 
     environment {
@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build(appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
-		        }
+                }
             }
         }
 
@@ -57,7 +57,7 @@ pipeline {
             }
             
     	    steps {
-        		script {
+                script {
         		    docker.withRegistry(comosusClientRegistry, registryCredential) {
                         dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push('latest')
@@ -67,7 +67,7 @@ pipeline {
 	    }
 	    
 	    stage('Deploy to ecs') {
-	       when {
+            when {
                 anyOf {
                     branch 'develop'
                     branch 'CI-CD'
