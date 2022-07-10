@@ -2,8 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { User } from '@src/resource/user/entities/user.entity';
 import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { ForgetPasswordInput, RegisterDetailInput } from './dto';
+import {
+  ForgetPasswordInput,
+  RegisterDetailInput,
+  ResetPasswordInput,
+} from './dto';
 import * as bcrypt from 'bcrypt';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+// const compareAsc = require('date-fns/compareAsc');
+import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { MailingService } from '@common';
 
@@ -66,7 +73,20 @@ export class AuthService {
 
     const password = await bcrypt.hash(_registerDetail.password, 10);
 
-    return this.userService.create({ email, username, password, acceptPolicy });
+    const { id, username: _username } = await this.userService.create({
+      email,
+      username,
+      password,
+      acceptPolicy,
+    });
+
+    return {
+      id,
+      accessToken: this.jwtService.sign({
+        username: _username,
+        sub: id,
+      }),
+    };
   }
 
   async forgetPasswordSendEmail({ email }: ForgetPasswordInput) {
@@ -88,5 +108,24 @@ export class AuthService {
       this.mailingService.sendEmail(email, emailContent);
     }
     return true;
+  }
+
+  async resetPassword({ resetToken, password }: ResetPasswordInput) {
+    const user = await this.userService.findByResetPasswordToken(resetToken);
+    if (!user) {
+      this.logger.error('Invalid link or link expired');
+    } else {
+      const { id, passwordResetTokenExpires } = user;
+      const expire_time = Date.parse(passwordResetTokenExpires);
+      const now = new Date().getTime();
+      if (compareAsc(expire_time, now) === 1) {
+        const newPassword = await bcrypt.hash(password, 10);
+        this.logger.log(`Creating newPassword for user ${user.username}`);
+        return this.userService.resetPassword(id, newPassword);
+      } else {
+        this.logger.error(`User ${user.username}'s resetPasswordToken expired`);
+        return false;
+      }
+    }
   }
 }
