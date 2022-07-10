@@ -46,7 +46,7 @@ ENV URL_META_AUTH_STRING gmail
 ENV DATABASE_URL mongodb
 ENV CRYPTO_SECRET defualt
 ENV SENDGRID_API_KEY SG
-ENV CLIENT_BASE_URL https://a-comosus.com
+ENV CLIENT_BASE_URL https
 
 
 CMD ["node", "dist/main"]

@@ -1,5 +1,4 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Link } from '@src/resource/link';
 
 @ObjectType()
 export class User {
@@ -7,11 +6,17 @@ export class User {
   id: string;
 
   @Field()
+  status: string;
+
+  @Field()
   email: string;
 
   @Field()
   username: string;
 
-  @Field(() => [Link])
-  links: [Link];
+  @Field({ nullable: true })
+  displayName: string;
+
+  @Field({ nullable: true })
+  categoryId: string;
 }
