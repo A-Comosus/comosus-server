@@ -31,6 +31,7 @@ pipeline {
 
         stage('Install and Build') {
             steps {
+                echo 'Install and Build'
                 sh 'yarn install && yarn prisma generate && yarn build'
             }
         }
