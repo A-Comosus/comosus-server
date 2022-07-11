@@ -7,10 +7,10 @@ pipeline {
 
     environment {
         registryCredential = 'ecr:ap-southeast-2:AWS_CREDS_SERVER_DEMO'
-        appRegistry = '997730026610.dkr.ecr.ap-southeast-2.amazonaws.com/a-comosus-server-demo'
+        appRegistry = '997730026610.dkr.ecr.ap-southeast-2.amazonaws.com/tf-a-comosus-server-ecr'
         comosusClientRegistry = 'https://997730026610.dkr.ecr.ap-southeast-2.amazonaws.com'
-        cluster = "a-comosus-server-cluster"
-        service = "test-backend-service"
+        cluster = "tf-a-comosus-server-cluster"
+        service = "tf-a-comosus-server-ecs-service"
     }
 
     stages {
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Fetch code') {
             steps{
-                git branch: 'ci-cd/jenkinsfile-ecs-Mable ', url: 'https://github.com/A-Comosus/comosus-server.git'
+                git branch: 'ci-cd/jenkinsfile-tf-Mable ', url: 'https://github.com/A-Comosus/comosus-server.git'
             }
         }
 
@@ -50,12 +50,12 @@ pipeline {
         }
 
         stage('Upload Image to ECR') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'ci-cd/*'
-                }
-            }
+            // when {
+            //     anyOf {
+            //         branch 'develop'
+            //         branch 'ci-cd/*'
+            //     }
+            // }
             
             steps {
                 script {
@@ -68,12 +68,12 @@ pipeline {
         }
         
         stage('Deploy to ECS') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'ci-cd/*'
-                }
-            }
+            // when {
+            //     anyOf {
+            //         branch 'develop'
+            //         branch 'ci-cd/*'
+            //     }
+            // }
             
             steps {
                 withAWS(credentials: 'AWS_CREDS_SERVER_DEMO', region: 'ap-southeast-2') {
