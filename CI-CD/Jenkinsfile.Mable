@@ -24,6 +24,7 @@ pipeline {
 
         stage('Fetch code') {
             steps{
+                echo 'Check out branch'
                 git branch: 'ci-cd/jenkinsfile-ecs-Mable ', url: 'https://github.com/A-Comosus/comosus-server.git'
             }
         }
