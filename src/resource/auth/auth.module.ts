@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { UserModule } from '@src/resource/user/user.module';
@@ -16,6 +17,7 @@ import { MailingModule } from '@common';
       secret: 'secret', // TODO: store this as environment variable
     }),
     MailingModule,
+    ConfigModule,
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
 })
