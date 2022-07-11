@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { User } from '@src/resource/user/entities/user.entity';
 import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -8,16 +9,17 @@ import {
   ResetPasswordInput,
 } from './dto';
 import * as bcrypt from 'bcrypt';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const compareAsc = require('date-fns/compareAsc');
+import axios from 'axios';
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { MailingService } from '@common';
+import { EnvVar } from '@src/constants';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   constructor(
+    private readonly configService: ConfigService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly mailingService: MailingService,
@@ -104,8 +106,16 @@ export class AuthService {
           <br>
           <br>
           <b>A-COMOSUS🍍</b>`;
-      this.logger.log(`Sending password reset email to ${email}...`);
-      this.mailingService.sendEmail(email, emailContent);
+      this.logger.log(
+        `Sending password reset email to ${email} through Lambda function`,
+      );
+      // this.mailingService.sendEmail(email, emailContent);
+      await axios.post(this.configService.get(EnvVar.LambdaSendEmailEndpoint), {
+        to: email,
+        subject: 'Your Password Reset Link',
+        text: emailContent,
+        html: emailContent,
+      });
     }
     return true;
   }
