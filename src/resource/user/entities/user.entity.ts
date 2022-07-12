@@ -18,6 +18,9 @@ export class User {
   displayName: string;
 
   @Field({ nullable: true })
+  profileTitle: string;
+
+  @Field({ nullable: true })
   bio: string;
 
   @Field({ nullable: true })
