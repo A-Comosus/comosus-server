@@ -9,6 +9,7 @@ import {
   FindUserByEmailInput,
   FindUserByUsernameResponse,
   OnboardUserInput,
+  UpdateProfileInput,
 } from './dto';
 
 @Resolver(() => User)
@@ -52,5 +53,13 @@ export class UserResolver {
   findByEmail(@Args('email') { email }: FindUserByEmailInput) {
     this.logger.log(`Receiving request to find user with email ${email}...`);
     return this.userService.findByEmail(email);
+  }
+
+  @Mutation(() => User)
+  updateProfile(@Args('data') data: UpdateProfileInput) {
+    this.logger.log(
+      `Receiving request to update profile of username ${data.username}...`,
+    );
+    return this.userService.updateProfile(data);
   }
 }
