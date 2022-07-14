@@ -8,7 +8,7 @@ export class FindUserByUsernameResponse {
   id: string;
 
   @Field()
-  email: string;
+  displayName: string;
 
   @Field()
   username: string;

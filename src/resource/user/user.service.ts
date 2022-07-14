@@ -71,11 +71,17 @@ export class UserService {
   }
 
   async findByUsername(_username: string) {
-    this.logger.log(`Found data of user with username ${_username}`);
-    return this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: { username: _username },
       include: { links: { where: { isDraft: false, isVisible: true } } },
     });
+
+    if (user) {
+      this.logger.log(`Found data of user with username ${_username}`);
+      return user;
+    } else {
+      this.logger.error(`User with username ${_username} does not exist`);
+    }
   }
 
   async findByEmail(_email: string) {
