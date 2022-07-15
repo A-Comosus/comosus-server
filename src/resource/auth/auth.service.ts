@@ -62,12 +62,6 @@ export class AuthService {
       `Registering {username: ${username}, email: ${email}} as new user...`,
     );
 
-    const user = await this.userService.findByUsername(username);
-    if (user) {
-      this.logger.error(`User ${username} already registered.`);
-      return;
-    }
-
     if (!acceptPolicy) {
       this.logger.error(`User ${username} did not accept policy`);
       return;
