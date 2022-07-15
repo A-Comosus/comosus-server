@@ -6,7 +6,7 @@ import { UserModule } from '@src/resource/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy, JwtStrategy } from './strategies';
 import { JwtModule } from '@nestjs/jwt';
-import { MailingModule } from '@common';
+import { AxiosModule } from '@src/common';
 
 @Module({
   imports: [
@@ -16,8 +16,8 @@ import { MailingModule } from '@common';
       signOptions: { expiresIn: '60s' },
       secret: 'secret', // TODO: store this as environment variable
     }),
-    MailingModule,
     ConfigModule,
+    AxiosModule,
   ],
   providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
 })
