@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { User } from '@src/resource/user/entities/user.entity';
 import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -9,20 +8,17 @@ import {
   ResetPasswordInput,
 } from './dto';
 import * as bcrypt from 'bcrypt';
-import axios from 'axios';
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
-import { MailingService } from '@common';
-import { EnvVar } from '@src/constants';
+import { AxiosService } from '@src/common';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   constructor(
-    private readonly configService: ConfigService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly mailingService: MailingService,
+    private readonly axiosService: AxiosService,
   ) {}
 
   async validateUser(_username: string, _password: string): Promise<any> {
@@ -103,15 +99,11 @@ export class AuthService {
       this.logger.log(
         `Sending password reset email to ${email} through Lambda function`,
       );
-      // this.mailingService.sendEmail(email, emailContent);
-      await axios.post(this.configService.get(EnvVar.LambdaSendEmailEndpoint), {
-        to: email,
-        subject: 'Your Password Reset Link',
-        text: emailContent,
-        html: emailContent,
-      });
+      const result = await this.axiosService.sendEmail({ email, emailContent });
+      this.logger.log('axiosService.sendEmail result', result);
+      if (!result) return false;
+      return true;
     }
-    return true;
   }
 
   async resetPassword({ resetToken, password }: ResetPasswordInput) {
