@@ -5,6 +5,10 @@ import { IsNotEmpty } from 'class-validator';
 export class UpdateProfileInput {
   @Field()
   @IsNotEmpty()
+  id: string;
+
+  @Field()
+  @IsNotEmpty()
   username: string;
 
   @Field()

@@ -135,13 +135,13 @@ export class UserService {
     });
   }
 
-  async updateProfile({ username, displayName, bio }: UpdateProfileInput) {
+  async updateProfile({ id, username, displayName, bio }: UpdateProfileInput) {
     const updatedData = {
       displayName,
       bio,
     };
     const updatedUser = await this.prisma.user.update({
-      where: { username },
+      where: { id },
       data: {
         ...updatedData,
         updatedAt: new Date().toISOString(),
