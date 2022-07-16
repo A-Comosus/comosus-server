@@ -47,7 +47,10 @@ export class LinkService {
 
   async findLinksOfUserByUserId(userId: string) {
     this.logger.log(`Found and returning links of user ${userId}...`);
-    return await this.prisma.link.findMany({ where: { userId } });
+    return await this.prisma.link.findMany({
+      where: { userId },
+      orderBy: { order: 'asc' },
+    });
   }
 
   async update({ id, isVisible, title, url }: UpdateLinkInput) {
