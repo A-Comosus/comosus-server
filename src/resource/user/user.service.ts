@@ -140,7 +140,7 @@ export class UserService {
     });
   }
 
-  async updateProfile({ id, username, displayName, bio }: UpdateProfileInput) {
+  async updateProfile({ id, displayName, bio }: UpdateProfileInput) {
     const updatedData = {
       displayName,
       bio,
@@ -153,10 +153,10 @@ export class UserService {
       },
     });
     if (updatedUser) {
-      this.logger.log(`Updated user profile of ${username}.`);
+      this.logger.log(`Updated user profile of ${id}.`);
       return updatedUser;
     } else {
-      this.logger.error(`Errored when updating user profile of ${username}.`);
+      this.logger.error(`Errored when updating user profile of ${id}.`);
     }
   }
 }

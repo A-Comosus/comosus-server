@@ -8,10 +8,6 @@ export class UpdateProfileInput {
   id: string;
 
   @Field()
-  @IsNotEmpty()
-  username: string;
-
-  @Field()
   displayName: string;
 
   @Field()

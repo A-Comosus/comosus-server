@@ -59,7 +59,7 @@ export class UserResolver {
   @UseGuards(JwtAuthGuard)
   updateProfile(@Args('data') data: UpdateProfileInput) {
     this.logger.log(
-      `Receiving request to update profile of username ${data.username}...`,
+      `Receiving request to update profile of user with id ${data.id}...`,
     );
     return this.userService.updateProfile(data);
   }
