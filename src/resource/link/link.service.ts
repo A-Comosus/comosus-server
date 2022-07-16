@@ -8,7 +8,6 @@ import {
   ReorderLinksOfUserInput,
   UpdateLinkInput,
 } from './dto';
-import { Link, PrismaPromise } from '@prisma/client';
 
 @Injectable()
 export class LinkService {
