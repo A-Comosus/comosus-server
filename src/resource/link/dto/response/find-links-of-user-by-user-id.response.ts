@@ -6,6 +6,9 @@ export class FindLinksOfUserByUserIdResponse {
   id: string;
 
   @Field()
+  order: number;
+
+  @Field()
   isDraft: boolean;
 
   @Field()

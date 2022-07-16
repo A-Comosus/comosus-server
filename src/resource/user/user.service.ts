@@ -73,7 +73,12 @@ export class UserService {
   async findByUsername(_username: string) {
     const user = await this.prisma.user.findFirst({
       where: { username: _username },
-      include: { links: { where: { isDraft: false, isVisible: true } } },
+      include: {
+        links: {
+          where: { isDraft: false, isVisible: true },
+          orderBy: { order: 'asc' },
+        },
+      },
     });
 
     if (user) {
