@@ -2,7 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as _ from 'lodash';
 import { PrismaService, AxiosService } from '@src/common';
 
-import { CreateLinkInput, CreateLinkResponse, UpdateLinkInput } from './dto';
+import {
+  CreateLinkInput,
+  CreateLinkResponse,
+  ReorderLinksOfUserInput,
+  UpdateLinkInput,
+} from './dto';
 
 @Injectable()
 export class LinkService {
@@ -13,6 +18,14 @@ export class LinkService {
   ) {}
 
   async create({ userId }: CreateLinkInput): Promise<CreateLinkResponse> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { links: true },
+    });
+
+    if (_.isNil(user))
+      this.logger.error(`User with id ${userId} does not exist.`);
+
     const newLink = await this.prisma.link.create({
       data: {
         isDraft: true,
@@ -20,6 +33,7 @@ export class LinkService {
         title: null,
         url: null,
         logoUrl: null,
+        order: user.links.length,
         user: { connect: { id: userId } },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -32,7 +46,10 @@ export class LinkService {
 
   async findLinksOfUserByUserId(userId: string) {
     this.logger.log(`Found and returning links of user ${userId}...`);
-    return await this.prisma.link.findMany({ where: { userId } });
+    return await this.prisma.link.findMany({
+      where: { userId },
+      orderBy: { order: 'asc' },
+    });
   }
 
   async update({ id, isVisible, title, url }: UpdateLinkInput) {
@@ -89,6 +106,20 @@ export class LinkService {
     } else {
       return link;
     }
+  }
+
+  async reorderLinksOfUser({ userId, order }: ReorderLinksOfUserInput) {
+    const reorderLinks = () => {
+      return order.map((link, index) => {
+        return this.prisma.link.update({
+          where: { id: link },
+          data: { order: index + 1 },
+        });
+      });
+    };
+
+    this.logger.log(`Returned list of updated link of user ${userId}.`);
+    return await Promise.all(reorderLinks());
   }
 
   async deleteById(id: string) {
