@@ -8,6 +8,7 @@ import {
   ReorderLinksOfUserInput,
   UpdateLinkInput,
 } from './dto';
+import { LinkType, SupportedType } from '@src/constants';
 
 @Injectable()
 export class LinkService {
@@ -60,21 +61,27 @@ export class LinkService {
       isVisible,
       title,
       url,
+      type:
+        SupportedType[new URL(url).hostname.replace('www.', '')] ??
+        LinkType.Generic,
       logoUrl: linkToBeUpdated.logoUrl,
     };
 
+    this.logger.log(`This link is validate with type of ${updatedData.type}`);
+
     // Validate url if it's different to the existing url.
-    if (!_.isEqual(url, linkToBeUpdated.url) && !_.isEmpty(url)) {
-      const {
-        title,
-        site: { logo },
-      } = await this.axiosService.validateUrl(url);
+    if (
+      !_.isEmpty(url) &&
+      !_.isEqual(url, linkToBeUpdated.url) &&
+      updatedData.type !== LinkType.Video
+    ) {
+      const { title, site } = await this.axiosService.validateUrl(url);
 
       // Use the extracted title if the user did not specify one.
-      if (_.isEmpty(updatedData.title)) {
+      if (_.isEmpty(updatedData.title) && !_.isNil(title))
         updatedData.title = title;
-      }
-      updatedData.logoUrl = logo;
+      const { logo } = site;
+      if (logo) updatedData.logoUrl = logo;
     }
 
     // Check if link can be published
