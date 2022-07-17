@@ -5,6 +5,7 @@ export enum EnvVar {
   ClientBaseUrl = 'CLIENT_BASE_URL',
   SendGridApiKey = 'SENDGRID_API_KEY',
   UrlMetaAuthString = 'URL_META_AUTH_STRING',
+  LambdaSendEmailEndpoint = 'LAMBDA_SEND_EMAIL_ENDPOINT',
 }
 
 export enum NodeEnv {

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 
-import { MailingService } from '@common';
+import { MailingService, AxiosService } from '@src/common';
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
 import { mockUsers } from './mockAuthData';
@@ -42,6 +42,7 @@ describe('AuthService should be...', () => {
         { provide: UserService, useValue: mockUserService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: MailingService, useValue: mockMailingService },
+        { provide: AxiosService, useValue: {} },
       ],
     }).compile();
 

@@ -55,4 +55,27 @@ export class AxiosService {
       return meta;
     }
   }
+
+  async sendEmail({ email, emailContent }) {
+    return await this.httpService.axiosRef
+      .post(this.configService.get(EnvVar.LambdaSendEmailEndpoint), {
+        to: email,
+        subject: 'Your Password Reset Link',
+        text: emailContent,
+        html: emailContent,
+      })
+      .then((res) => {
+        if (res.status === HttpStatus.OK) {
+          this.logger.log(`Lambda sendEmail succeeded`);
+          return true;
+        } else {
+          this.logger.log(`Lambda sendEmail failed with ${res.data}`);
+          return false;
+        }
+      })
+      .catch((err) => {
+        this.logger.error(`Lambda sendEmail failed with exception ${err}`);
+        return false;
+      });
+  }
 }

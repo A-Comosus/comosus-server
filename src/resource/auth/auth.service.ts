@@ -8,11 +8,9 @@ import {
   ResetPasswordInput,
 } from './dto';
 import * as bcrypt from 'bcrypt';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const compareAsc = require('date-fns/compareAsc');
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
-import { MailingService } from '@common';
+import { AxiosService } from '@src/common';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +18,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly mailingService: MailingService,
+    private readonly axiosService: AxiosService,
   ) {}
 
   async validateUser(_username: string, _password: string): Promise<any> {
@@ -98,10 +96,14 @@ export class AuthService {
           <br>
           <br>
           <b>A-COMOSUS🍍</b>`;
-      this.logger.log(`Sending password reset email to ${email}...`);
-      this.mailingService.sendEmail(email, emailContent);
+      this.logger.log(
+        `Sending password reset email to ${email} through Lambda function`,
+      );
+      const result = await this.axiosService.sendEmail({ email, emailContent });
+      this.logger.log('axiosService.sendEmail result', result);
+      if (!result) return false;
+      return true;
     }
-    return true;
   }
 
   async resetPassword({ resetToken, password }: ResetPasswordInput) {
