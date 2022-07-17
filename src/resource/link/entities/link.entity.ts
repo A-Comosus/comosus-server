@@ -6,6 +6,9 @@ export class Link {
   id: string;
 
   @Field()
+  type: string;
+
+  @Field()
   isDraft: boolean;
 
   @Field()

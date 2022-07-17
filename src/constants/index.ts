@@ -15,3 +15,4 @@ export enum NodeEnv {
 
 export { UrlMeta } from './UrlMeta';
 export { UserStatus } from './User';
+export * from './Link';

@@ -6,6 +6,9 @@ export class UpdateLinkResponse {
   id: string;
 
   @Field()
+  type: string;
+
+  @Field()
   isVisible: boolean;
 
   @Field()

@@ -38,6 +38,7 @@ model Category {
 
 model Link {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  type String @default("generic")
   isDraft Boolean @default(true)
   isVisible Boolean @default(true)
   title String?
