@@ -13,6 +13,9 @@ export class FindUserByUsernameResponse {
   @Field()
   username: string;
 
+  @Field({ nullable: true })
+  bio: string;
+
   @Field(() => [Link])
   links: [Link];
 }

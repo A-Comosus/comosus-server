@@ -18,5 +18,8 @@ export class User {
   displayName: string;
 
   @Field({ nullable: true })
+  bio: string;
+
+  @Field({ nullable: true })
   categoryId: string;
 }

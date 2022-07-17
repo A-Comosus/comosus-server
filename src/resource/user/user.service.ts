@@ -4,7 +4,7 @@ import { isNil } from 'lodash';
 import { addHours } from 'date-fns';
 import 'crypto';
 
-import { CreateUserInput, OnboardUserInput } from './dto';
+import { CreateUserInput, OnboardUserInput, UpdateProfileInput } from './dto';
 import { PrismaService } from '@src/common';
 import { EnvVar, UserStatus } from '@src/constants';
 
@@ -138,5 +138,25 @@ export class UserService {
         updatedAt: new Date().toISOString(),
       },
     });
+  }
+
+  async updateProfile({ id, displayName, bio }: UpdateProfileInput) {
+    const updatedData = {
+      displayName,
+      bio,
+    };
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...updatedData,
+        updatedAt: new Date().toISOString(),
+      },
+    });
+    if (updatedUser) {
+      this.logger.log(`Updated user profile of ${id}.`);
+      return updatedUser;
+    } else {
+      this.logger.error(`Errored when updating user profile of ${id}.`);
+    }
   }
 }
