@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 
 import { UrlMeta } from '@src/constants/UrlMeta';
 import { EnvVar, NodeEnv } from '@src/constants';
+import { Octokit } from 'octokit';
 
 @Injectable()
 export class AxiosService {
@@ -54,5 +55,56 @@ export class AxiosService {
       this.logger.log(`Url validated.`);
       return meta;
     }
+  }
+
+  async getGithubOrgInfo() {
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_PAT,
+    });
+    const { data } = await octokit.request(
+      `GET /orgs/${process.env.ORGANISATION_NAME}`,
+      {
+        org: 'ORG',
+      },
+    );
+    return data;
+  }
+
+  async getGithubOrgMember() {
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_PAT,
+    });
+    const { data } = await octokit.request(
+      `GET /orgs/${process.env.ORGANISATION_NAME}/members`,
+      {
+        org: 'ORG',
+      },
+    );
+    return data;
+  }
+  async getGithubOrgRepos() {
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_PAT,
+    });
+    const { data } = await octokit.request(
+      `GET /orgs/${process.env.ORGANISATION_NAME}/repos`,
+      {
+        org: 'ORG',
+      },
+    );
+    return data;
+  }
+
+  async getRepoLanguage() {
+    const octokit = new Octokit({
+      auth: process.env.GITHUB_PAT,
+    });
+    const { data } = await octokit.request(
+      `GET /repos/${process.env.ORGANISATION_NAME}/comosus-client/language`,
+      {
+        org: 'ORG',
+      },
+    );
+    return data;
   }
 }

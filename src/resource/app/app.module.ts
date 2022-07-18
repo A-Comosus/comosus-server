@@ -4,13 +4,19 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
 
-import { MailingService, PrismaService, CustomLoggerService } from '@common';
+import {
+  AxiosModule,
+  MailingService,
+  PrismaService,
+  CustomLoggerService,
+} from '@common';
 import { UserModule, AuthModule, LinkModule } from '@resource';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
+    AxiosModule,
     ConfigModule.forRoot({
       isGlobal: false, // Set ConfigModule to be accessible in other modules
       envFilePath: ['.env', '.env.development', '.env.development.local'],
