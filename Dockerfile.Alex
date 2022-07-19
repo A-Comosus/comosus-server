@@ -47,6 +47,7 @@ ENV DATABASE_URL mongodb
 ENV CRYPTO_SECRET defualt
 ENV SENDGRID_API_KEY SG
 ENV CLIENT_BASE_URL https
+ENV NO_COLOR no_color
 
 
 CMD ["node", "dist/main"]
