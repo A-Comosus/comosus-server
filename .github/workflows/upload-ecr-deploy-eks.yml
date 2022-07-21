@@ -48,4 +48,4 @@ jobs:
         run: terraform init
 
       - name: Terraform apply
-        run: terraform apply -var-file=uat-var.tfvars -var="backend_image_tage=${GITHUB_RUN_NUMBER}" -target module.backend -auto-approve
+        run: terraform apply -var-file=uat-var.tfvars -var="backend_image_tag=${GITHUB_RUN_NUMBER}" -target module.backend -auto-approve
