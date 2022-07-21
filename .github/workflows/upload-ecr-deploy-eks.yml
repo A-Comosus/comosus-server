@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - 'develop'
+    - 'ci-cd/update-backend-github-action-flow'
 
 jobs:
   build:
