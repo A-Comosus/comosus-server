@@ -10,4 +10,7 @@ export { FindLinksOfUserByUserIdResponse } from './response/find-links-of-user-b
 export { UpdateLinkInput } from './input/update-link.input';
 export { UpdateLinkResponse } from './response/update-link.response';
 
+// Reorder Link
+export { ReorderLinksOfUserInput } from './input/reorder-links-of-user.input';
+
 export { DeleteLinkInput } from './input/delete-link.input';

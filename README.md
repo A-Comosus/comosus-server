@@ -30,6 +30,7 @@ TL;DR You need to set up following environment variables.
 | \*CRYPTO_SECRET        | It's a secret 🤫                                                                                                                 |
 | \*SENDGRID_API_KEY    | You probably need to ask your project manager for this, else create one on SendGrid and update the mailing service configuration |
 | \*URL_META_AUTH_STRING | You need this env var to run a 3rd-party api to validate url and extract meta data for us                                        |
+| \*LAMBDA_SEND_EMAIL_ENDPOINT | You need this env var to run the lambda send email function                                        |
 
 At this stage, our `docker-compose.yml` is not ready yet, so please either find the database `DATABASE_URL` either by [setting it up yourself](https://www.mongodb.com/docs/atlas/getting-started/) or ask your project admin.
 

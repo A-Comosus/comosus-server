@@ -4,7 +4,7 @@ import { isNil } from 'lodash';
 import { addHours } from 'date-fns';
 import 'crypto';
 
-import { CreateUserInput, OnboardUserInput } from './dto';
+import { CreateUserInput, OnboardUserInput, UpdateProfileInput } from './dto';
 import { PrismaService } from '@src/common';
 import { EnvVar, UserStatus } from '@src/constants';
 
@@ -71,11 +71,22 @@ export class UserService {
   }
 
   async findByUsername(_username: string) {
-    this.logger.log(`Found data of user with username ${_username}`);
-    return this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: { username: _username },
-      include: { links: { where: { isDraft: false, isVisible: true } } },
+      include: {
+        links: {
+          where: { isDraft: false, isVisible: true },
+          orderBy: { order: 'asc' },
+        },
+      },
     });
+
+    if (user) {
+      this.logger.log(`Found data of user with username ${_username}`);
+      return user;
+    } else {
+      this.logger.error(`User with username ${_username} does not exist`);
+    }
   }
 
   async findByEmail(_email: string) {
@@ -127,5 +138,25 @@ export class UserService {
         updatedAt: new Date().toISOString(),
       },
     });
+  }
+
+  async updateProfile({ id, displayName, bio }: UpdateProfileInput) {
+    const updatedData = {
+      displayName,
+      bio,
+    };
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...updatedData,
+        updatedAt: new Date().toISOString(),
+      },
+    });
+    if (updatedUser) {
+      this.logger.log(`Updated user profile of ${id}.`);
+      return updatedUser;
+    } else {
+      this.logger.error(`Errored when updating user profile of ${id}.`);
+    }
   }
 }

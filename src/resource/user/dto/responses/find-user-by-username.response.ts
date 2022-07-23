@@ -8,10 +8,13 @@ export class FindUserByUsernameResponse {
   id: string;
 
   @Field()
-  email: string;
+  displayName: string;
 
   @Field()
   username: string;
+
+  @Field({ nullable: true })
+  bio: string;
 
   @Field(() => [Link])
   links: [Link];

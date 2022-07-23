@@ -10,6 +10,7 @@ import {
   FindLinksOfUserByUserIdInput,
   UpdateLinkInput,
   UpdateLinkResponse,
+  ReorderLinksOfUserInput,
   DeleteLinkInput,
 } from './dto';
 
@@ -39,6 +40,14 @@ export class LinkResolver {
       `Receiving request to update title of link ${updateLinkInput.id}...`,
     );
     return this.linkService.update(updateLinkInput);
+  }
+
+  @Mutation(() => [FindLinksOfUserByUserIdResponse])
+  reorderLinksOfUser(@Args('data') data: ReorderLinksOfUserInput) {
+    this.logger.log(
+      `Receiving request to reorder links of user with id ${data.userId}`,
+    );
+    return this.linkService.reorderLinksOfUser(data);
   }
 
   @Mutation(() => Boolean, { name: 'deleteLinkById' })
