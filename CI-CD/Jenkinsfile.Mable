@@ -50,12 +50,12 @@ pipeline {
         }
 
         stage('Upload Image to ECR') {
-            // when {
-            //     anyOf {
-            //         branch 'develop'
-            //         branch 'ci-cd/*'
-            //     }
-            // }
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'ci-cd/*'
+                }
+            }
             
             steps {
                 script {
@@ -68,12 +68,12 @@ pipeline {
         }
         
         stage('Deploy to ECS') {
-            // when {
-            //     anyOf {
-            //         branch 'develop'
-            //         branch 'ci-cd/*'
-            //     }
-            // }
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'ci-cd/*'
+                }
+            }
             
             steps {
                 withAWS(credentials: 'AWS_CREDS_SERVER_DEMO', region: 'ap-southeast-2') {
