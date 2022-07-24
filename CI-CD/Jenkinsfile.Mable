@@ -18,12 +18,6 @@ pipeline {
             }
         }
 
-        stage('Fetch code') {
-            steps{
-                git branch: 'develop', url: 'https://github.com/A-Comosus/comosus-server.git'
-            }
-        }
-
         stage('Install and Build') {
             steps {
                 echo 'Install and Build'
