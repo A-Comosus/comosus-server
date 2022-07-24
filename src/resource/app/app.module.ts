@@ -8,6 +8,7 @@ import { MailingService, PrismaService, CustomLoggerService } from '@common';
 import { UserModule, AuthModule, LinkModule, CategoryModule } from '@resource';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
+import { AxiosModule } from '@src/common';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AppService } from './app.service';
     AuthModule,
     LinkModule,
     CategoryModule,
+    AxiosModule,
   ],
   providers: [
     AppResolver,
