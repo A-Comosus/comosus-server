@@ -18,6 +18,12 @@ pipeline {
             }
         }
 
+        stage('Fetch code') {
+            steps{
+                git branch: 'ci-cd/jenkins-tf-Mable ', url: 'https://github.com/A-Comosus/comosus-server.git'
+            }
+        }
+
         stage('Install and Build') {
             steps {
                 echo 'Install and Build'
