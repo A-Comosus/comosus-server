@@ -56,11 +56,11 @@ export class AxiosService {
     }
   }
 
-  async sendEmail({ email, emailContent }) {
+  async sendEmail({ email, subject, emailContent }) {
     return await this.httpService.axiosRef
       .post(this.configService.get(EnvVar.LambdaSendEmailEndpoint), {
         to: email,
-        subject: 'Your Password Reset Link',
+        subject: subject,
         text: emailContent,
         html: emailContent,
       })
