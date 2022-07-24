@@ -7,6 +7,7 @@ import { AxiosService } from '@src/common';
 export class AppService {
   private readonly logger = new Logger(AppService.name);
   constructor(private readonly axiosService: AxiosService) {}
+
   getServerInfo(): App {
     this.logger.log('Responding with server information...');
     return { status: 'Server is up' };
@@ -22,9 +23,9 @@ export class AppService {
           <p>You've received a contact message, please see details as below:</p> 
           <br>
           <br>
-          <b>Name: ${customerName} </b>
-          <b>E-mail: ${email} </b>
-          <b>phone: ${phone} </b>
+          <p>Name: ${customerName} </p> 
+          <p>E-mail: ${email} </p>
+          <p>phone: ${phone} </p>
           <p>Message:${message}</p>`;
     this.logger.log(
       `Sending customer contact request to project.a.comosus@gmail.com through Lambda function`,
