@@ -99,7 +99,12 @@ export class AuthService {
       this.logger.log(
         `Sending password reset email to ${email} through Lambda function`,
       );
-      const result = await this.axiosService.sendEmail({ email, emailContent });
+      const subject = 'Your Password Reset Link';
+      const result = await this.axiosService.sendEmail({
+        email,
+        subject,
+        emailContent,
+      });
       this.logger.log('axiosService.sendEmail result', result);
       if (!result) return false;
       return true;
