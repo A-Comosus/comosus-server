@@ -1,10 +1,6 @@
 pipeline {
     agent any
-
-    tools {
-        nodejs 'node18.4.0'
-    }
-
+    
     environment {
         registryCredential = 'ecr:ap-southeast-2:AWS_CREDS_SERVER_DEMO'
         appRegistry = '997730026610.dkr.ecr.ap-southeast-2.amazonaws.com/tf-a-comosus-server-ecr'
