@@ -20,7 +20,7 @@ pipeline {
 
         stage('Fetch code') {
             steps{
-                git branch: 'ci-cd/jenkins-tf-Mable ', url: 'https://github.com/A-Comosus/comosus-server.git'
+                git branch: 'develop', url: 'https://github.com/A-Comosus/comosus-server.git'
             }
         }
 
