@@ -31,7 +31,7 @@ export class AppService {
     );
     const subject = 'Receive a contact form';
     const result = await this.axiosService.sendEmail({
-      email,
+      email: 'project.a.comosus@gmail.com',
       subject,
       emailContent,
     });
