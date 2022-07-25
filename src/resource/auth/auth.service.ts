@@ -6,11 +6,13 @@ import {
   ForgetPasswordInput,
   RegisterDetailInput,
   ResetPasswordInput,
+  VerifyEmailInput,
 } from './dto';
 import * as bcrypt from 'bcrypt';
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { AxiosService } from '@src/common';
+import { UserStatus } from '@src/constants';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +55,7 @@ export class AuthService {
   }
 
   async register(_registerDetail: RegisterDetailInput) {
-    const { email, username, acceptPolicy } = _registerDetail;
+    const { email, username, acceptPolicy, verified } = _registerDetail;
     this.logger.log(
       `Registering {username: ${username}, email: ${email}} as new user...`,
     );
@@ -70,8 +72,27 @@ export class AuthService {
       username,
       password,
       acceptPolicy,
+      verified,
     });
 
+    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}/reset-password/${id}`;
+    const subject = 'Please verify your A-Comosus account';
+    const emailContent = `<b>Hi ${username} 👋</b> 
+    <p>Please verify your A-Comosus account following the link: </p> 
+    <a>${verifyEmailLink}</a>
+    <br>
+    <br>
+    <b>A-COMOSUS🍍</b>`;
+    const result = await this.axiosService.sendEmail({
+      email,
+      subject,
+      emailContent,
+    });
+    this.logger.log(
+      'axiosService.sendEmail of verify user email result ...',
+      result,
+    );
+    if (!result) return false;
     return {
       id,
       accessToken: this.jwtService.sign({
@@ -79,6 +100,25 @@ export class AuthService {
         sub: id,
       }),
     };
+  }
+
+  async verifyUserEmail({ id }: VerifyEmailInput) {
+    const user = await this.userService.findById(id);
+    if (!user) {
+      this.logger.error(`User with id ${id} does not exist`);
+      return;
+    } else {
+      const { verified } = user;
+      if (!verified) {
+        this.logger.log(`Verifying user with id ${id} ...`);
+        this.userService.updateUserById(id, {
+          verified: true,
+          status: UserStatus.Verified,
+        });
+        this.logger.log(`Verified user with id ${id} successfully`);
+        return true;
+      }
+    }
   }
 
   async forgetPasswordSendEmail({ email }: ForgetPasswordInput) {
