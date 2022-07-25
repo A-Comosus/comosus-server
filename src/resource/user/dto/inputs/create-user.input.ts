@@ -18,8 +18,4 @@ export class CreateUserInput {
   @Field()
   @Equals(true)
   acceptPolicy: boolean;
-
-  @Field()
-  @Equals(false)
-  verified: boolean;
 }

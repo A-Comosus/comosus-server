@@ -27,7 +27,6 @@ model User {
   createdAt String
   updatedAt String
   links Link[]
-  verified Boolean
 }
 
 model Category {
