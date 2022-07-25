@@ -5,7 +5,7 @@ import { addHours } from 'date-fns';
 import 'crypto';
 
 import { CreateUserInput, OnboardUserInput, UpdateProfileInput } from './dto';
-import { PrismaService } from '@src/common';
+import { PrismaService, AxiosService } from '@src/common';
 import { EnvVar, UserStatus } from '@src/constants';
 
 @Injectable()
@@ -14,6 +14,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private readonly axiosService: AxiosService,
   ) {}
 
   async create(_createUserInput: CreateUserInput) {
@@ -32,6 +33,28 @@ export class UserService {
   async onboardUser({ id, displayName, categoryId }: OnboardUserInput) {
     this.logger.log(`Onboarded user of id ${id}.`);
 
+    const user = await this.findById(id);
+    const { email } = user;
+    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}/reset-password/${id}`;
+    const subject = 'Please verify your A-Comosus account';
+    const emailContent = `<b>Hi ${displayName} 👋</b> 
+    <p>Please verify your A-Comosus account following the link: </p> 
+    <a>${verifyEmailLink}</a>
+    <br>
+    <br>
+    <b>A-COMOSUS🍍</b>`;
+
+    const result = await this.axiosService.sendEmail({
+      email,
+      subject,
+      emailContent,
+    });
+
+    this.logger.log(
+      'axiosService.sendEmail of verify user email result ...',
+      result,
+    );
+    if (!result) return false;
     if (
       isNil(
         await this.prisma.category.findUnique({

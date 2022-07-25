@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async register(_registerDetail: RegisterDetailInput) {
-    const { email, username, acceptPolicy, verified } = _registerDetail;
+    const { email, username, acceptPolicy } = _registerDetail;
     this.logger.log(
       `Registering {username: ${username}, email: ${email}} as new user...`,
     );
@@ -72,27 +72,8 @@ export class AuthService {
       username,
       password,
       acceptPolicy,
-      verified,
     });
 
-    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}/reset-password/${id}`;
-    const subject = 'Please verify your A-Comosus account';
-    const emailContent = `<b>Hi ${username} 👋</b> 
-    <p>Please verify your A-Comosus account following the link: </p> 
-    <a>${verifyEmailLink}</a>
-    <br>
-    <br>
-    <b>A-COMOSUS🍍</b>`;
-    const result = await this.axiosService.sendEmail({
-      email,
-      subject,
-      emailContent,
-    });
-    this.logger.log(
-      'axiosService.sendEmail of verify user email result ...',
-      result,
-    );
-    if (!result) return false;
     return {
       id,
       accessToken: this.jwtService.sign({
@@ -108,16 +89,12 @@ export class AuthService {
       this.logger.error(`User with id ${id} does not exist`);
       return;
     } else {
-      const { verified } = user;
-      if (!verified) {
-        this.logger.log(`Verifying user with id ${id} ...`);
-        this.userService.updateUserById(id, {
-          verified: true,
-          status: UserStatus.Verified,
-        });
-        this.logger.log(`Verified user with id ${id} successfully`);
-        return true;
-      }
+      this.logger.log(`Verifying user with id ${id} ...`);
+      this.userService.updateUserById(id, {
+        status: UserStatus.Verified,
+      });
+      this.logger.log(`Verified user with id ${id} successfully`);
+      return true;
     }
   }
 
