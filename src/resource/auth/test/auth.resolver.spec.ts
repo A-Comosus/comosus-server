@@ -45,9 +45,9 @@ describe('AuthResolver should be...', () => {
   });
 
   it('able to register', async () => {
-    const { email, username, password, acceptPolicy } = mockUsers[0];
+    const { email, username, password, acceptPolicy, verified } = mockUsers[0];
     expect(
-      resolver.register({ email, username, password, acceptPolicy }),
+      resolver.register({ email, username, password, acceptPolicy, verified }),
     ).toMatchObject({ id: expect.any(String) });
   });
 

@@ -7,6 +7,7 @@ export const mockUsers = [
     acceptPolicy: true,
     passwordResetToken: 'abc',
     passwordResetTokenExpires: '2023-06-04T11:41:07.790Z',
+    verified: false,
   },
   {
     id: '1',
@@ -16,6 +17,7 @@ export const mockUsers = [
     acceptPolicy: true,
     passwordResetToken: '123',
     passwordResetTokenExpires: '2022-06-04T11:56:36.238Z',
+    verified: false,
   },
   {
     id: '2',
@@ -25,5 +27,6 @@ export const mockUsers = [
     acceptPolicy: false,
     passwordResetToken: '1e1',
     passwordResetTokenExpires: '2021-06-04T11:41:07.790Z',
+    verified: false,
   },
 ];
