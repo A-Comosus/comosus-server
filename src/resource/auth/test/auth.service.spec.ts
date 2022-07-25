@@ -34,6 +34,9 @@ describe('AuthService should be...', () => {
   const mockMailingService = {
     sendEmail: jest.fn(),
   };
+  const mockAxiosService = {
+    sendEmail: jest.fn(),
+  };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,7 +45,7 @@ describe('AuthService should be...', () => {
         { provide: UserService, useValue: mockUserService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: MailingService, useValue: mockMailingService },
-        { provide: AxiosService, useValue: {} },
+        { provide: AxiosService, useValue: mockAxiosService },
       ],
     }).compile();
 
