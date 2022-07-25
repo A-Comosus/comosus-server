@@ -63,6 +63,7 @@ describe('AuthService should be...', () => {
       username: 'username',
       password: 'secret',
       acceptPolicy: true,
+      verified: false,
     };
     expect(await service.register(registerInput)).toMatchObject({
       id: expect.any(String),
