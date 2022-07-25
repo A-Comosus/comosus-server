@@ -35,14 +35,20 @@ describe('UserService', () => {
     },
   };
 
+  const mockAxiosService = {
+    sendEmail: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
-      providers: [UserService, PrismaService, ConfigService, AxiosService],
-    })
-      .overrideProvider(PrismaService)
-      .useValue(mockPrismaClient)
-      .compile();
+      providers: [
+        UserService,
+        { provide: PrismaService, useValue: mockPrismaClient },
+        ConfigService,
+        { provide: AxiosService, useValue: mockAxiosService },
+      ],
+    }).compile();
 
     userService = module.get<UserService>(UserService);
   });
