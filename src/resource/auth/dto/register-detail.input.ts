@@ -18,4 +18,8 @@ export class RegisterDetailInput {
   @Field()
   @Equals(true)
   acceptPolicy: boolean;
+
+  @Field()
+  @Equals(false)
+  verified: boolean;
 }
