@@ -35,7 +35,7 @@ export class UserService {
 
     const user = await this.findById(id);
     const { email } = user;
-    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}/reset-password/${id}`;
+    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}/verify-account/${id}`;
     const subject = 'Please verify your A-Comosus account';
     const emailContent = `<b>Hi ${displayName} 👋</b> 
     <p>Please verify your A-Comosus account following the link: </p> 
