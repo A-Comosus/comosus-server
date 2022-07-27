@@ -4,7 +4,12 @@ import { isNil } from 'lodash';
 import { addHours } from 'date-fns';
 import 'crypto';
 
-import { CreateUserInput, OnboardUserInput, UpdateProfileInput } from './dto';
+import {
+  CreateUserInput,
+  OnboardUserInput,
+  UpdateProfileInput,
+  VerifyAccountSendEmailInput,
+} from './dto';
 import { PrismaService, AxiosService } from '@src/common';
 import { EnvVar, UserStatus } from '@src/constants';
 
@@ -33,28 +38,6 @@ export class UserService {
   async onboardUser({ id, displayName, categoryId }: OnboardUserInput) {
     this.logger.log(`Onboarded user of id ${id}.`);
 
-    const user = await this.findById(id);
-    const { email } = user;
-    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}/verify-account/${id}`;
-    const subject = 'Please verify your A-Comosus account';
-    const emailContent = `<b>Hi ${displayName} 👋</b> 
-    <p>Please verify your A-Comosus account following the link: </p> 
-    <a>${verifyEmailLink}</a>
-    <br>
-    <br>
-    <b>A-COMOSUS🍍</b>`;
-
-    const result = await this.axiosService.sendEmail({
-      email,
-      subject,
-      emailContent,
-    });
-
-    this.logger.log(
-      'axiosService.sendEmail of verify user email result ...',
-      result,
-    );
-    if (!result) return false;
     if (
       isNil(
         await this.prisma.category.findUnique({
@@ -73,6 +56,32 @@ export class UserService {
         updatedAt: new Date().toISOString(),
       },
     });
+  }
+
+  async verifyAccountSendEmail({ id }: VerifyAccountSendEmailInput) {
+    const user = await this.findById(id);
+    const { email, username } = user;
+    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}verify-account/${id}`;
+    const subject = 'Please verify your A-Comosus account';
+    const emailContent = `<b>Hi ${username} 👋</b> 
+    <p>Please verify your A-Comosus account following the link: </p> 
+    <a>${verifyEmailLink}</a>
+    <br>
+    <br>
+    <b>A-COMOSUS🍍</b>`;
+
+    const result = await this.axiosService.sendEmail({
+      email,
+      subject,
+      emailContent,
+    });
+
+    this.logger.log(
+      'axiosService.sendEmail of verify user email result ...',
+      result,
+    );
+    if (!result) return false;
+    return true;
   }
 
   async findAll() {
