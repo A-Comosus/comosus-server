@@ -86,8 +86,7 @@ export class AuthService {
   async verifyUserEmail({ id }: VerifyEmailInput) {
     const user = await this.userService.findById(id);
     if (!user) {
-      this.logger.error(`User with id ${id} does not exist`);
-      return;
+      throw new Error(`User with id ${id} does not exist`);
     } else {
       this.logger.log(`Verifying user with id ${id} ...`);
       this.userService.updateUserById(id, {
