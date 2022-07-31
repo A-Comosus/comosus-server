@@ -65,7 +65,7 @@ export class AuthService {
 
     const password = await bcrypt.hash(_registerDetail.password, 10);
 
-    const { id, username: _username } = await this.userService.create({
+    const user = await this.userService.create({
       email,
       username,
       password,
@@ -73,10 +73,10 @@ export class AuthService {
     });
 
     return {
-      id,
+      user,
       accessToken: this.jwtService.sign({
-        username: _username,
-        sub: id,
+        username: user.username,
+        sub: user.id,
       }),
     };
   }
