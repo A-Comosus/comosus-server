@@ -37,6 +37,9 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   verifyUserEmail(@Args('detail') verifyEmailInput: VerifyEmailInput) {
+    this.logger.log(
+      `Receiving request to verify user email with id: ${verifyEmailInput.id} ...`,
+    );
     return this.authService.verifyUserEmail(verifyEmailInput);
   }
 
