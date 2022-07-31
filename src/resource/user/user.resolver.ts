@@ -69,7 +69,7 @@ export class UserResolver {
   @UseGuards(JwtAuthGuard)
   verifyAccountSendEmail(@Args('id') id: VerifyAccountSendEmailInput) {
     this.logger.log(
-      `Receiving request to update profile of user with id ${id}...`,
+      `Receiving request to send user an email to verify their account with id ${id}...`,
     );
     return this.userService.verifyAccountSendEmail(id);
   }
