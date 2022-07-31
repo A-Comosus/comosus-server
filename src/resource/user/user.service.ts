@@ -80,7 +80,11 @@ export class UserService {
       'axiosService.sendEmail of verify user email result ...',
       result,
     );
-    if (!result) return false;
+    if (!result) {
+      this.logger.error(
+        `No result returned from sendEmail service for ${email}`,
+      );
+    }
     return true;
   }
 
