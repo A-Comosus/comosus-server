@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+    
+    environment {
+        registryCredential = 'ecr:ap-southeast-2:AWS_CREDS_SERVER_DEMO'
+        appRegistry = '997730026610.dkr.ecr.ap-southeast-2.amazonaws.com/tf-a-comosus-server-ecr'
+        comosusClientRegistry = 'https://997730026610.dkr.ecr.ap-southeast-2.amazonaws.com'
+        cluster = "tf-a-comosus-server-cluster"
+        service = "tf-a-comosus-server-ecs-service"
+    }
+
+    stages {
+        stage('Cleanup docker space') {
+            steps {
+                echo 'Cleanup docker space'
+                sh 'docker system prune -f'
+                cleanWs()
+            }
+        }
+
+        stage('Fetch code') {
+            steps{
+                git branch: 'develop', url: 'https://github.com/A-Comosus/comosus-server.git'
+            }
+        }
+
+        stage('Install and Build') {
+            steps {
+                echo 'Install and Build'
+                sh 'yarn install && yarn prisma generate && yarn build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'yarn test:cov'
+            }
+        }
+
+        stage('Build App Image') {
+            steps {
+                script {
+                    dockerImage = docker.build(appRegistry + ":$BUILD_NUMBER", "-f Dockerfile.Mable .")
+                }
+            }
+        }
+
+        stage('Upload Image to ECR') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'ci-cd/*'
+                }
+            }
+            
+            steps {
+                script {
+                    docker.withRegistry(comosusClientRegistry, registryCredential) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to ECS') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'ci-cd/*'
+                }
+            }
+            
+            steps {
+                withAWS(credentials: 'AWS_CREDS_SERVER_DEMO', region: 'ap-southeast-2') {
+                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                }
+            }
+        }
+    }
+}
