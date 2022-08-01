@@ -76,15 +76,12 @@ export class UserService {
       emailContent,
     });
 
-    this.logger.log(
-      'axiosService.sendEmail of verify user email result ...',
-      result,
-    );
     if (!result) {
       this.logger.error(
         `No result returned from sendEmail service for ${email}`,
       );
     }
+    this.logger.log('Account verification email sent successfully ...');
     return true;
   }
 
