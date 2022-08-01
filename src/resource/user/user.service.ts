@@ -4,8 +4,13 @@ import { isNil } from 'lodash';
 import { addHours } from 'date-fns';
 import 'crypto';
 
-import { CreateUserInput, OnboardUserInput, UpdateProfileInput } from './dto';
-import { PrismaService } from '@src/common';
+import {
+  CreateUserInput,
+  OnboardUserInput,
+  UpdateProfileInput,
+  VerifyAccountSendEmailInput,
+} from './dto';
+import { PrismaService, AxiosService } from '@src/common';
 import { EnvVar, UserStatus } from '@src/constants';
 
 @Injectable()
@@ -14,6 +19,7 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private readonly axiosService: AxiosService,
   ) {}
 
   async create(_createUserInput: CreateUserInput) {
@@ -50,6 +56,33 @@ export class UserService {
         updatedAt: new Date().toISOString(),
       },
     });
+  }
+
+  async verifyAccountSendEmail({ id }: VerifyAccountSendEmailInput) {
+    const user = await this.findById(id);
+    const { email, username } = user;
+    const verifyEmailLink = `${process.env.CLIENT_BASE_URL}verify-account/${id}`;
+    const subject = 'Please verify your A-Comosus account';
+    const emailContent = `<b>Hi ${username} 👋</b> 
+    <p>Please verify your A-Comosus account following the link: </p> 
+    <a>${verifyEmailLink}</a>
+    <br>
+    <br>
+    <b>A-COMOSUS🍍</b>`;
+
+    const result = await this.axiosService.sendEmail({
+      email,
+      subject,
+      emailContent,
+    });
+
+    if (!result) {
+      this.logger.error(
+        `No result returned from sendEmail service for ${email}`,
+      );
+    }
+    this.logger.log('Account verification email sent successfully ...');
+    return true;
   }
 
   async findAll() {

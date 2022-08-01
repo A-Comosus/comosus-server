@@ -10,6 +10,7 @@ import {
   FindUserByUsernameResponse,
   OnboardUserInput,
   UpdateProfileInput,
+  VerifyAccountSendEmailInput,
 } from './dto';
 
 @Resolver(() => User)
@@ -62,5 +63,14 @@ export class UserResolver {
       `Receiving request to update profile of user with id ${data.id}...`,
     );
     return this.userService.updateProfile(data);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
+  verifyAccountSendEmail(@Args('id') id: VerifyAccountSendEmailInput) {
+    this.logger.log(
+      `Receiving request to send user an email to verify their account with id ${id}...`,
+    );
+    return this.userService.verifyAccountSendEmail(id);
   }
 }
