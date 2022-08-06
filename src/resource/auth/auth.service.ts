@@ -6,11 +6,13 @@ import {
   ForgetPasswordInput,
   RegisterDetailInput,
   ResetPasswordInput,
+  VerifyEmailInput,
 } from './dto';
 import * as bcrypt from 'bcrypt';
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { AxiosService } from '@src/common';
+import { UserStatus } from '@src/constants';
 
 @Injectable()
 export class AuthService {
@@ -79,6 +81,20 @@ export class AuthService {
         sub: user.id,
       }),
     };
+  }
+
+  async verifyUserEmail({ id }: VerifyEmailInput) {
+    const user = await this.userService.findById(id);
+    if (!user) {
+      this.logger.error(`User with id ${id} does not exist`);
+    } else {
+      this.logger.log(`Verifying user with id ${id} ...`);
+      this.userService.updateUserById(id, {
+        status: UserStatus.Verified,
+      });
+      this.logger.log(`Verified user with id ${id} successfully`);
+      return true;
+    }
   }
 
   async forgetPasswordSendEmail({ email }: ForgetPasswordInput) {
