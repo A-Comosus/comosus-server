@@ -4,9 +4,8 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from './guards';
 import {
-  RegisterResponse,
+  AuthResponse,
   LoginDetailInput,
-  LoginResponse,
   RegisterDetailInput,
   ForgetPasswordInput,
   ResetPasswordInput,
@@ -18,7 +17,7 @@ export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => LoginResponse)
+  @Mutation(() => AuthResponse)
   @UseGuards(GqlAuthGuard)
   login(@Args('detail') _loginDetail: LoginDetailInput, @Context() _context) {
     this.logger.log(
@@ -27,7 +26,7 @@ export class AuthResolver {
     return this.authService.login(_context.user);
   }
 
-  @Mutation(() => RegisterResponse)
+  @Mutation(() => AuthResponse)
   register(@Args('detail') _registerDetail: RegisterDetailInput) {
     this.logger.log(
       `Receiving request to register with email ${_registerDetail.email}...`,
