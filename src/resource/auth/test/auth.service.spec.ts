@@ -29,7 +29,7 @@ describe('AuthService should be...', () => {
     resetPassword: jest.fn(),
   };
   const mockJwtService = {
-    sign: jest.fn(),
+    sign: jest.fn().mockReturnValue(Math.random().toString(36)),
   };
   const mockMailingService = {
     sendEmail: jest.fn(),
@@ -65,7 +65,8 @@ describe('AuthService should be...', () => {
       acceptPolicy: true,
     };
     expect(await service.register(registerInput)).toMatchObject({
-      id: expect.any(String),
+      user: expect.any(Object),
+      accessToken: expect.any(String),
     });
   });
 });
