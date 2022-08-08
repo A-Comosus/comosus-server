@@ -192,4 +192,19 @@ export class UserService {
       this.logger.error(`Errored when updating user profile of ${id}.`);
     }
   }
+
+  async deleteAccount(id: string) {
+    try {
+      await this.prisma.link.deleteMany({ where: { userId: id } });
+      await this.prisma.user.delete({ where: { id } });
+
+      this.logger.log(`Deleted user account with id ${id}`);
+      return true;
+    } catch (e) {
+      this.logger.error(
+        `Server errored when deleting user account of id ${id}`,
+        e.message,
+      );
+    }
+  }
 }

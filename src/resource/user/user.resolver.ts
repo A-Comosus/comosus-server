@@ -73,4 +73,13 @@ export class UserResolver {
     );
     return this.userService.verifyAccountSendEmail(id);
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
+  deleteAccount(@Args('id') id: string) {
+    this.logger.log(
+      `Receiving request to send user an email to verify their account with id ${id}...`,
+    );
+    return this.userService.deleteAccount(id);
+  }
 }
