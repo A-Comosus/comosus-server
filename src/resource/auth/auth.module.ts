@@ -13,7 +13,7 @@ import { AxiosModule } from '@src/common';
     PassportModule,
     UserModule,
     JwtModule.register({
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: `${24 * 60 * 60}s` },
       secret: 'secret', // TODO: store this as environment variable
     }),
     ConfigModule,
