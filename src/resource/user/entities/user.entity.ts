@@ -8,6 +8,9 @@ export class User {
   @Field()
   status: string;
 
+  @Field({ nullable: true })
+  avatarUrl: string;
+
   @Field()
   email: string;
 

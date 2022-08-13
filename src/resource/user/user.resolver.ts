@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '@src/resource/auth/guards';
@@ -81,5 +81,14 @@ export class UserResolver {
       `Receiving request to send user an email to verify their account with id ${id}...`,
     );
     return this.userService.deleteAccount(id);
+  }
+
+  @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
+  updateAvatarUrl(@Args('url') url: string, @Context() context) {
+    this.logger.log(
+      `Receiving request to send user an email to verify their account with id ${context.req.user.userId}...`,
+    );
+    return this.userService.updateAvatar(url, context.req.user.userId);
   }
 }
