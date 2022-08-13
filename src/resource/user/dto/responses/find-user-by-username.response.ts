@@ -7,6 +7,9 @@ export class FindUserByUsernameResponse {
   @Field()
   id: string;
 
+  @Field({ nullable: true })
+  avatarUrl: string;
+
   @Field()
   displayName: string;
 

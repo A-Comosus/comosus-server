@@ -207,4 +207,18 @@ export class UserService {
       );
     }
   }
+
+  async updateAvatar(url: string, id: string) {
+    try {
+      const user = await this.updateUserById(id, { avatarUrl: url });
+
+      this.logger.log(`Updated avatar of user with id ${id}`);
+      return user;
+    } catch (e) {
+      this.logger.error(
+        `Server errored when updating avatar for user with id ${id}`,
+        e.message,
+      );
+    }
+  }
 }
