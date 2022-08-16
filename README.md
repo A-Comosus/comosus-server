@@ -25,7 +25,7 @@ TL;DR You need to set up following environment variables.
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | PORT                   | The port for this server to listen to                                                                                            |
 | NODE_ENV               | Environment this app will run within `development` \| `staging` \| `production`                                                  |
-| CLIENT_BASE_URL        | The url to our front-end application                                                                                             |
+| CLIENT_BASE_URL        | The url to our front-end application, currently used for populating the email template with the correct url to direct users.     |
 | \*DATABASE_URL         | The connection string to your database                                                                                           |
 | \*CRYPTO_SECRET        | It's a secret 🤫                                                                                                                 |
 | \*SENDGRID_API_KEY    | You probably need to ask your project manager for this, else create one on SendGrid and update the mailing service configuration |
