@@ -4,7 +4,7 @@ import { UserService } from '@src/resource/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import {
   ForgetPasswordInput,
-  RegisterDetailInput,
+  RegisterInput,
   ResetPasswordInput,
   VerifyEmailInput,
 } from './dto';
@@ -12,7 +12,9 @@ import * as bcrypt from 'bcrypt';
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { AxiosService } from '@src/common';
-import { UserStatus } from '@src/constants';
+import { QueryError, UserStatus } from '@src/constants';
+import { matches } from 'class-validator';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -54,33 +56,61 @@ export class AuthService {
     };
   }
 
-  async register(_registerDetail: RegisterDetailInput) {
-    const { email, username, acceptPolicy } = _registerDetail;
-    this.logger.log(
-      `Registering {username: ${username}, email: ${email}} as new user...`,
-    );
+  async register(detail: RegisterInput) {
+    const { email, username, acceptPolicy } = detail;
 
     if (!acceptPolicy) {
-      this.logger.error(`User ${username} did not accept policy`);
-      return;
+      this.logger.warn(`User ${email} did not accept policy`);
+      return {
+        code: 'Aceept_Policy',
+        message: 'User did not accept policy agreements',
+        key: 'policy',
+      };
     }
 
-    const password = await bcrypt.hash(_registerDetail.password, 10);
+    if (!matches(username, /^[a-z0-9]*$/g)) {
+      this.logger.warn(`User ${email} did not match username regex.`);
+      return {
+        code: 'Regex_Username',
+        message:
+          'Username must only contian lowercase alphanumeric characters.',
+        key: 'regex.username',
+      };
+    }
 
-    const user = await this.userService.create({
-      email,
-      username,
-      password,
-      acceptPolicy,
-    });
+    const password = await bcrypt.hash(detail.password, 10);
 
-    return {
-      user,
-      accessToken: this.jwtService.sign({
-        username: user.username,
-        sub: user.id,
-      }),
-    };
+    try {
+      const user = await this.userService.create({
+        email,
+        username,
+        password,
+        acceptPolicy,
+      });
+
+      return {
+        user,
+        accessToken: this.jwtService.sign({
+          username: user.username,
+          sub: user.id,
+        }),
+      };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        const { code, meta } = error;
+        if (code === QueryError.UniqueConstraintFailed) {
+          const key = (meta?.target as string)
+            .replace('User_', '')
+            .replace('_key', '');
+          const message = `Request failed when registering user ${detail.username}. [${code}: ${meta?.target} failed unique constraint]`;
+          return {
+            code,
+            key,
+            message,
+          };
+        }
+      }
+    }
   }
 
   async verifyUserEmail({ id }: VerifyEmailInput) {

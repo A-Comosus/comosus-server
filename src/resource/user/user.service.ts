@@ -22,17 +22,22 @@ export class UserService {
     private readonly axiosService: AxiosService,
   ) {}
 
-  async create(_createUserInput: CreateUserInput) {
-    this.logger.log(`Created user with username ${_createUserInput.username}.`);
-    return await this.prisma.user.create({
+  async create(detail: CreateUserInput) {
+    const user = await this.prisma.user.create({
       data: {
-        ..._createUserInput,
+        ...detail,
         status: UserStatus.Registered,
         timeAcceptPolicy: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
     });
+
+    if (user) {
+      this.logger.log(`Created user with username ${detail.username}.`);
+    }
+
+    return user;
   }
 
   async onboardUser({ id, displayName, categoryId }: OnboardUserInput) {

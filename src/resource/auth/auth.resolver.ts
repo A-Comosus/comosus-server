@@ -6,10 +6,11 @@ import { GqlAuthGuard } from './guards';
 import {
   AuthResponse,
   LoginDetailInput,
-  RegisterDetailInput,
   ForgetPasswordInput,
   ResetPasswordInput,
   VerifyEmailInput,
+  RegisterInput,
+  RegisterResult,
 } from './dto';
 
 @Resolver()
@@ -26,12 +27,10 @@ export class AuthResolver {
     return this.authService.login(_context.user);
   }
 
-  @Mutation(() => AuthResponse)
-  register(@Args('detail') _registerDetail: RegisterDetailInput) {
-    this.logger.log(
-      `Receiving request to register with email ${_registerDetail.email}...`,
-    );
-    return this.authService.register(_registerDetail);
+  @Mutation(() => RegisterResult)
+  register(@Args('detail') detail: RegisterInput) {
+    this.logger.log(`Receiving request to register user ${detail.email}...`);
+    return this.authService.register(detail);
   }
 
   @Mutation(() => Boolean)
