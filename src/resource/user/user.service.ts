@@ -11,7 +11,8 @@ import {
   VerifyAccountSendEmailInput,
 } from './dto';
 import { PrismaService, AxiosService } from '@src/common';
-import { EnvVar, UserStatus } from '@src/constants';
+import { EnvVar, QueryError, UserStatus } from '@src/constants';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -22,17 +23,35 @@ export class UserService {
     private readonly axiosService: AxiosService,
   ) {}
 
-  async create(_createUserInput: CreateUserInput) {
-    this.logger.log(`Created user with username ${_createUserInput.username}.`);
-    return await this.prisma.user.create({
-      data: {
-        ..._createUserInput,
-        status: UserStatus.Registered,
-        timeAcceptPolicy: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    });
+  async create(detail: CreateUserInput) {
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          ...detail,
+          status: UserStatus.Registered,
+          timeAcceptPolicy: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      });
+
+      if (user) {
+        this.logger.log(`Created user with username ${detail.username}.`);
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        const { code, meta } = error;
+        if (code === QueryError.UniqueConstraintFailed) {
+          const key = (meta?.target as string)
+            .replace('User_', '')
+            .replace('_key', '');
+          const message = `Request failed when registering user ${detail.username}. [${code}: ${meta?.target} failed unique constraint]`;
+          return { code, key, message };
+        }
+      }
+    }
   }
 
   async onboardUser({ id, displayName, categoryId }: OnboardUserInput) {
