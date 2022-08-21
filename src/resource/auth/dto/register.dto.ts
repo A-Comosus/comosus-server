@@ -1,24 +1,16 @@
 import { createUnionType, ObjectType, InputType, Field } from '@nestjs/graphql';
 import { User } from '@src/resource/user';
 
-import {
-  IsEmail,
-  IsNotEmpty,
-  Equals,
-  Matches,
-  IsLowercase,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class RegisterInput {
   @Field()
   @IsEmail()
-  @IsLowercase()
   email: string;
 
   @Field()
   @IsNotEmpty()
-  @Matches(/^[a-z0-9]*$/g)
   username: string;
 
   @Field()
@@ -26,7 +18,6 @@ export class RegisterInput {
   password: string;
 
   @Field()
-  @Equals(true)
   acceptPolicy: boolean;
 }
 
@@ -34,7 +25,7 @@ export const RegisterResult = createUnionType({
   name: 'RegisterResult',
   types: () => [RegisterSuccess, RegisterError] as const,
   resolveType(value) {
-    if (value.user) {
+    if (value.accessToken) {
       return RegisterSuccess;
     }
     if (value.code) {
