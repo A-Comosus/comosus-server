@@ -1,5 +1,5 @@
 import { isNil } from 'lodash';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthService } from '../auth.service';
@@ -13,12 +13,16 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(username: string, password: string): Promise<any> {
     this.logger.log(`Validating user ${username}...`);
-    const user = await this.authService.validateUser(username, password);
+    const result = await this.authService.validateUser(username, password);
 
-    if (isNil(user)) {
-      throw new UnauthorizedException();
+    if (isNil(result)) {
+      return {
+        code: 'AC-unauthorized',
+        message: `Failed to validate user ${username}`,
+        key: 'unauthorized',
+      };
     }
 
-    return user;
+    return result;
   }
 }

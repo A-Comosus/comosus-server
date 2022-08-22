@@ -5,3 +5,4 @@ export { AuthResponse } from './auth.response';
 export { VerifyEmailInput } from './verify-email.input';
 
 export * from './register.dto';
+export * from './login.dto';

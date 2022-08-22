@@ -4,13 +4,13 @@ import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { GqlAuthGuard } from './guards';
 import {
-  AuthResponse,
-  LoginDetailInput,
+  RegisterInput,
+  RegisterResult,
+  LoginInput,
+  LoginResult,
   ForgetPasswordInput,
   ResetPasswordInput,
   VerifyEmailInput,
-  RegisterInput,
-  RegisterResult,
 } from './dto';
 
 @Resolver()
@@ -18,13 +18,13 @@ export class AuthResolver {
   private readonly logger = new Logger(AuthResolver.name);
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => AuthResponse)
+  @Mutation(() => LoginResult)
   @UseGuards(GqlAuthGuard)
-  login(@Args('detail') _loginDetail: LoginDetailInput, @Context() _context) {
-    this.logger.log(
-      `Finishing request to login with ${_loginDetail.username}...`,
-    );
-    return this.authService.login(_context.user);
+  login(@Args('detail') detail: LoginInput, @Context() context) {
+    if (context.user.code) return context.user;
+
+    this.logger.log(`Finishing request to login with ${detail.username}...`);
+    return this.authService.login(context.user);
   }
 
   @Mutation(() => RegisterResult)

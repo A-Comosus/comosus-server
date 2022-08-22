@@ -123,7 +123,8 @@ export class UserService {
       this.logger.log(`Found data of user with username ${_username}`);
       return user;
     } else {
-      this.logger.error(`User with username ${_username} does not exist`);
+      this.logger.warn(`User with username ${_username} does not exist`);
+      return null;
     }
   }
 

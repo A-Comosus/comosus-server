@@ -25,24 +25,24 @@ export class AuthService {
     private readonly axiosService: AxiosService,
   ) {}
 
-  async validateUser(_username: string, _password: string): Promise<any> {
-    this.logger.log(`Validating user ${_username}...`);
-    const user = await this.userService.findByUsername(_username);
+  async validateUser(username: string, password: string): Promise<User | null> {
+    this.logger.log(`Validating user ${username}...`);
+    const user = await this.userService.findByUsername(username);
     if (isNil(user)) {
-      this.logger.error(`User ${_username} does not exist.`);
-      return;
+      this.logger.warn(
+        `Failed when validating user ${username}, user does not exist.`,
+      );
+      return null;
     }
 
-    const isValid = await bcrypt.compare(_password, user?.password);
+    const isValid = await bcrypt.compare(password, user?.password);
     if (isValid) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
-    } else {
-      this.logger.error(`Credential does not match for user ${_username} `);
-
-      return;
     }
+
+    return null;
   }
 
   async login(user: User) {
