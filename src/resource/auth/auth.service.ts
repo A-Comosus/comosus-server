@@ -138,7 +138,7 @@ export class AuthService {
       const resetLink = await this.userService.createPasswordResetLink(id);
       const emailContent = `<b>Hi ${username} 👋</b> 
           <p>We've received a request to reset your password, please click the link: </p> 
-          <a>${resetLink}</a>
+          <a href="${resetLink}">${resetLink}</a>
           <br>
           <br>
           <b>A-COMOSUS🍍</b>`;

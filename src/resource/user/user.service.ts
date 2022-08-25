@@ -70,7 +70,7 @@ export class UserService {
     const subject = 'Please verify your A-Comosus account';
     const emailContent = `<b>Hi ${username} 👋</b> 
     <p>Please verify your A-Comosus account following the link: </p> 
-    <a>${verifyEmailLink}</a>
+    <a href="${verifyEmailLink}">${verifyEmailLink}</a>
     <br>
     <br>
     <b>A-COMOSUS🍍</b>`;
