@@ -10,6 +10,11 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AxiosModule } from '@src/common';
 
+const schemaFilePath =
+  process.env.LAMBDA_TASK_ROOT && process.env.AWS_EXECUTION_ENV
+    ? '/tmp/schema.gql'
+    : join(process.cwd(), 'src/schema/schema.gql');
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,7 +23,7 @@ import { AxiosModule } from '@src/common';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema/schema.gql'),
+      autoSchemaFile: schemaFilePath,
       sortSchema: true,
       introspection: true,
     }),

@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -11,44 +12,44 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  avatarUrl String @default("")
-  username  String  @unique
-  displayName String?
-  bio  String?
-  email  String  @unique
-  password  String
-  status String
-  categoryId String?
-  category Category? @relation(fields: [categoryId], references: [id])
-  acceptPolicy Boolean
-  timeAcceptPolicy String
-  passwordResetToken String?
+  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+  avatarUrl                 String    @default("")
+  username                  String    @unique
+  displayName               String?
+  bio                       String?
+  email                     String    @unique
+  password                  String
+  status                    String
+  categoryId                String?
+  category                  Category? @relation(fields: [categoryId], references: [id])
+  acceptPolicy              Boolean
+  timeAcceptPolicy          String
+  passwordResetToken        String?
   passwordResetTokenExpires String?
-  createdAt String
-  updatedAt String
-  links Link[]
+  createdAt                 String
+  updatedAt                 String
+  links                     Link[]
 }
 
 model Category {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  type String @unique
-  users User[]
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  type      String @unique
+  users     User[]
   createdAt String
   updatedAt String
 }
 
 model Link {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  type String @default("generic")
-  isDraft Boolean @default(true)
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  type      String  @default("generic")
+  isDraft   Boolean @default(true)
   isVisible Boolean @default(true)
-  title String?
-  url String?
-  logoUrl String?
-  order Int 
-  user User @relation(fields: [userId], references: [id])
-  userId String @db.ObjectId
+  title     String?
+  url       String?
+  logoUrl   String?
+  order     Int
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @db.ObjectId
   createdAt String
   updatedAt String
 }

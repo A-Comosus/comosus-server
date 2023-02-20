@@ -8,7 +8,7 @@ import {
   ResetPasswordInput,
   VerifyEmailInput,
 } from './dto';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { compareAsc } from 'date-fns';
 import { isNil } from 'lodash';
 import { AxiosService } from '@src/common';

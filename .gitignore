@@ -405,3 +405,6 @@ Temporary Items
 # Local
 .env
 dist
+
+# Serverless Framework
+.serverless
