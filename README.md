@@ -19,51 +19,11 @@
 
 ### Setting up development environment
 
-TL;DR You need to set up following environment variables.
+With the serverless variant of this application, you just need to have the right AWS credential to access the environment variables on the console.
 
-| name                         | description                                                                                                                  |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| PORT                         | The port for this server to listen to                                                                                        |
-| NODE_ENV                     | Environment this app will run within `development` \| `staging` \| `production`                                              |
-| CLIENT_BASE_URL              | The url to our front-end application, currently used for populating the email template with the correct url to direct users. |
-| \*DATABASE_URL               | The connection string to your database                                                                                       |
-| \*CRYPTO_SECRET              | It's a secret 🤫                                                                                                             |
-| \*URL_META_AUTH_STRING       | You need this env var to run a 3rd-party api to validate url and extract meta data for us                                    |
-| \*LAMBDA_SEND_EMAIL_ENDPOINT | You need this env var to run the lambda send email function                                                                  |
+### Starting the server locally
 
-At this stage, our `docker-compose.yml` is not ready yet, so please either find the database `DATABASE_URL` either by [setting it up yourself](https://www.mongodb.com/docs/atlas/getting-started/) or ask your project admin.
-
-Once your atlas is created, create a `.env` file at project root directory and add you database connection string as `DATABASE_URL`
-
-```js
-DATABASE_URL = YOUR_CONNECTION_STRING;
-```
-
-### Starting the server
-
-This project prefers using `yarn` as it's package manager.
-
-```bash
-# Installing dependencies
-$ yarn
-
-# Generate Prisma Client
-$ yarn prisma generate
-
-# Start the server in development mode with watch mode or...
-$ yarn start:dev
- or
-$ npm start:dev
-
-# without watch mode
-$ yarn start
-or
-$ npm start
-
-# Or run this to start the server in production mode
-$ yarn run start:prod
-$ npm run start:prod
-```
+This serverless variant uses `serverless-offline`, simply run `yarn offline` to start the server
 
 ## 🧪 How to write test for this server?
 
@@ -115,7 +75,7 @@ yarn run e2e:cov      # show coverage
 
 | Category            | Packages                                                                       |
 | ------------------- | ------------------------------------------------------------------------------ |
-| Framework           | `nest`                                                                         |
+| Framework           | `nest`, `serverless`                                                           |
 | BootStrapper        | `@nestjs/cli`                                                                  |
 | Scripting Language  | `typescript`                                                                   |
 | Web API             | `graphql`, `@nestjs/graphql`                                                   |
