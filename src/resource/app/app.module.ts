@@ -4,7 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
 
-import { MailingService, PrismaService, CustomLoggerService } from '@common';
+import { PrismaService, CustomLoggerService } from '@common';
 import { UserModule, AuthModule, LinkModule, CategoryModule } from '@resource';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
@@ -33,12 +33,6 @@ const schemaFilePath =
     CategoryModule,
     AxiosModule,
   ],
-  providers: [
-    AppResolver,
-    AppService,
-    PrismaService,
-    MailingService,
-    CustomLoggerService,
-  ],
+  providers: [AppResolver, AppService, PrismaService, CustomLoggerService],
 })
 export class AppModule {}

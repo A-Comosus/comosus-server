@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 
-import { MailingService, AxiosService } from '@src/common';
+import { AxiosService } from '@src/common';
 import { UserService } from '@resource';
 import { AuthService } from '../auth.service';
 import { mockUsers } from './mockAuthData';
@@ -31,9 +31,6 @@ describe('AuthService should be...', () => {
   const mockJwtService = {
     sign: jest.fn().mockReturnValue(Math.random().toString(36)),
   };
-  const mockMailingService = {
-    sendEmail: jest.fn(),
-  };
   const mockAxiosService = {
     sendEmail: jest.fn(),
   };
@@ -44,7 +41,6 @@ describe('AuthService should be...', () => {
         AuthService,
         { provide: UserService, useValue: mockUserService },
         { provide: JwtService, useValue: mockJwtService },
-        { provide: MailingService, useValue: mockMailingService },
         { provide: AxiosService, useValue: mockAxiosService },
       ],
     }).compile();

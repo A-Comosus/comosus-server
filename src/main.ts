@@ -7,7 +7,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { Context } from 'aws-lambda';
 import { createServer, proxy, Response } from 'aws-serverless-express';
 
-import { PrismaService, MailingService, CustomLoggerService } from '@common';
+import { PrismaService, CustomLoggerService } from '@common';
 import { AppModule } from './resource/app/app.module';
 import { setupSwagger } from './config';
 
@@ -25,9 +25,6 @@ async function createExpressApp(expressApp: Express) {
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
-
-  const mailingService = app.get(MailingService);
-  mailingService.initMailingService();
 
   return app;
 }
