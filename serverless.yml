@@ -2,20 +2,22 @@ org: acomosus
 app: comosus-server
 service: comosus-server
 
-functions:
-  app:
-    handler: dist/main.handler
-    events:
-      - http:
-          method: any
-          path: /{any+}
-
 provider:
   name: aws
   runtime: nodejs14.x
   region: ap-southeast-2
   apiGateway:
     shouldStartNameWithService: true
+
+functions:
+  app:
+    handler: dist/main.handler
+    environment: ${ssm:/aws/reference/secretsmanager/prod/comosus-server}
+    timeout: 10
+    events:
+      - http:
+          method: any
+          path: /{any+}
 
 package:
   patterns:
