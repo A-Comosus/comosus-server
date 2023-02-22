@@ -22,7 +22,8 @@
     "e2e": "jest --config ./jest.e2e.config.js",
     "e2e:watch": "jest --watch --config ./jest.e2e.config.js",
     "offline": "nest build && serverless offline",
-    "deploy": "nest build && serverless deploy"
+    "deploy:dev": "nest build && serverless deploy --stage dev",
+    "deploy:prod": "nest build && serverless deploy --stage prod"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.11",
